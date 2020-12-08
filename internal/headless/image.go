@@ -1,5 +1,7 @@
 package headless
 
+import "github.com/split-cube-studios/ardent/engine"
+
 // Image is a headless implementation of engine.Image
 type Image struct{}
 
@@ -47,4 +49,12 @@ func (i Image) Dispose() {}
 
 func (i Image) IsDisposed() bool {
 	return false
+}
+
+func (i Image) Position() engine.Vec2 {
+	return engine.Vec2{}
+}
+
+func (i Image) Class() string {
+	return "image"
 }

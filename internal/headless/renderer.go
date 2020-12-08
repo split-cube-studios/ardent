@@ -1,6 +1,8 @@
 package headless
 
 import (
+	"image"
+
 	"github.com/split-cube-studios/ardent/engine"
 )
 
@@ -24,6 +26,6 @@ func (r Renderer) SetViewport(w, h int) {}
 
 func (r Renderer) Tick() {}
 
-func (r Renderer) Cull(v engine.Vec2) bool {
-	return false
+func (r Renderer) Viewport() image.Rectangle {
+	return image.Rect(0, 0, 0, 0)
 }

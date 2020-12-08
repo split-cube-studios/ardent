@@ -1,6 +1,9 @@
 package ebiten
 
-import "github.com/hajimehoshi/ebiten"
+import (
+	"github.com/hajimehoshi/ebiten"
+	"github.com/split-cube-studios/ardent/engine"
+)
 
 // Image is an ebiten implementation of engine.Image
 type Image struct {
@@ -105,6 +108,14 @@ func (i *Image) Undispose() {
 // IsDisposed indicates if the image has been dispoed.
 func (i *Image) IsDisposed() bool {
 	return i.disposed
+}
+
+func (i *Image) Position() engine.Vec2 {
+	return engine.Vec2{i.tx, i.ty}
+}
+
+func (i *Image) Class() string {
+	return "image"
 }
 
 // disposable describes behavior for disposable resources.

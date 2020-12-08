@@ -66,4 +66,8 @@ type Image interface {
 	// IsDisposed indicates if the image
 	// has been disposed.
 	IsDisposed() bool
+
+	Position() Vec2
+
+	Class() string
 }

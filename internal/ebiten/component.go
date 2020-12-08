@@ -123,11 +123,11 @@ func (c *component) NewAnimationFromAssetPath(path string) (engine.Animation, er
 }
 
 func (c *component) NewRenderer() engine.Renderer {
-	return new(Renderer)
+	return NewRenderer()
 }
 
 func (c *component) NewIsoRenderer() engine.IsoRenderer {
-	return new(IsoRenderer)
+	return NewIsoRenderer()
 }
 
 func (c *component) NewTilemap(

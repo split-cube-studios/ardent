@@ -1,6 +1,8 @@
 package ebiten
 
 import (
+	"math"
+
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/inpututil"
 	"github.com/split-cube-studios/ardent/engine"
@@ -56,6 +58,12 @@ func (i *Input) IsMouseButtonJustReleased(k int) bool {
 
 func (i *Input) CursorPosition() (int, int) {
 	x, y := ebiten.CursorPosition()
+	if x <= math.MinInt32 {
+		x = 0
+	}
+	if y <= math.MinInt32 {
+		y = 0
+	}
 
 	if i.minX+i.minY+i.maxX+i.maxY == 0 {
 		return x, y

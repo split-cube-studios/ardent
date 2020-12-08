@@ -1,5 +1,7 @@
 package engine
 
+import "image"
+
 // A Renderer is a basic context for drawing images.
 type Renderer interface {
 	// AddImage adds one or more images
@@ -13,7 +15,7 @@ type Renderer interface {
 
 	SetViewport(int, int)
 
-	Tick()
+	Viewport() image.Rectangle
 
-	Cull(Vec2) bool
+	Tick()
 }
