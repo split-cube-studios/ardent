@@ -2,6 +2,7 @@ package ebiten
 
 import (
 	"math"
+	"sort"
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/split-cube-studios/ardent/engine"
@@ -223,6 +224,33 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 			r.drawQueue = append(r.drawQueue, topTiles...)
 
 			// sort queue
+			sort.SliceStable(r.drawQueue, func(i, j int) bool {
+				var ty1, ty2 float64
+
+				img := r.drawQueue[i].img
+				_, h := img.Size()
+
+				if r.drawQueue[i].isTile {
+					ty1 = img.ty + float64(h-r.drawQueue[i].tileHeight/8)
+				} else {
+					ty1 = img.ty + float64(h)
+				}
+
+				img = r.drawQueue[j].img
+				_, h = img.Size()
+
+				if r.drawQueue[j].isTile {
+					ty2 = img.ty + float64(h-r.drawQueue[j].tileHeight/8)
+				} else {
+					ty2 = img.ty + float64(h)
+				}
+
+				return ty1 < ty2
+			})
+
+			sort.SliceStable(r.drawQueue, func(i, j int) bool {
+				return r.drawQueue[i].img.z < r.drawQueue[j].img.z
+			})
 
 			// fix this
 			r.drawQueue = append(layers[0], r.drawQueue...)
@@ -323,33 +351,6 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 		}
 
 		for i, layer := range layers {
-			sort.SliceStable(layer, func(i, j int) bool {
-				var ty1, ty2 float64
-
-				img := layer[i].img
-				_, h := img.Size()
-
-				if layer[i].isTile {
-					ty1 = img.ty + float64(h-layer[i].tileHeight/8)
-				} else {
-					ty1 = img.ty + float64(h)
-				}
-
-				img = layer[j].img
-				_, h = img.Size()
-
-				if layer[j].isTile {
-					ty2 = img.ty + float64(h-layer[j].tileHeight/8)
-				} else {
-					ty2 = img.ty + float64(h)
-				}
-
-				return ty1 < ty2
-			})
-
-			sort.SliceStable(layer, func(i, j int) bool {
-				return layer[i].img.z < layer[j].img.z
-			})
 
 			for _, isoImage := range layer {
 				if i == len(layers)-1 && r.tilemap.OverlapEvent != nil && isoImage.isTile {
