@@ -62,7 +62,7 @@ func (c *Context) updateEntities(entries []PartitionEntry) {
 
 		hitbox, ok := entry.(Hitbox)
 		if !ok {
-			return
+			continue
 		}
 
 		for _, targetClass := range hitbox.HitClasses() {
