@@ -43,12 +43,9 @@ func main() {
 		},
 	)
 
-	// get component factory
-	component := game.Component()
-
 	// create new renderer and animation
-	renderer := component.NewRenderer()
-	animation, _ = component.NewAnimationFromAssetPath("../animation/animation.asset")
+	renderer := game.NewRenderer()
+	animation, _ = game.NewAnimationFromAssetPath("./examples/animation/animation.asset")
 	animation.Scale(4, 4)
 	animation.SetState("sw")
 

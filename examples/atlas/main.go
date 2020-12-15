@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/split-cube-studios/ardent/assetutil"
+	"log"
 	"math"
 
 	"github.com/split-cube-studios/ardent"
@@ -24,15 +26,15 @@ func main() {
 		},
 	)
 
-	// get component factory
-	component := game.Component()
-
 	// create new renderer
-	renderer := component.NewRenderer()
+	renderer := game.NewRenderer()
 
 	// create new atlas from asset file
-	atlas, _ := component.NewAtlasFromAssetPath("atlas.asset")
-
+	assetutil.CreateAssets("./examples/atlas")
+	atlas, err := game.NewAtlasFromAssetPath("./examples/atlas/atlas.asset")
+	if err != nil {
+		log.Fatal(err)
+	}
 	// get atlas subimages
 	stripes := atlas.GetImage("stripes")
 	swirls := atlas.GetImage("swirls")

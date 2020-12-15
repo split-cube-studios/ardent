@@ -25,12 +25,9 @@ func main() {
 		},
 	)
 
-	// get component factory
-	component := game.Component()
-
 	// create new renderer and text image
-	renderer := component.NewRenderer()
-	image := component.NewTextImage(
+	renderer := game.NewRenderer()
+	image := game.NewTextImage(
 		"Hello world!\nThis is a sample text image!",
 		400,
 		30,
