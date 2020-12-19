@@ -1,6 +1,7 @@
 package ebiten
 
 import (
+	"image"
 	"math"
 	"sort"
 
@@ -154,8 +155,6 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 
 				var tmpImage *isoRendererImage
 
-				// var x, y float64
-
 				switch img.(type) {
 				case *Image:
 					i := img.(*Image)
@@ -182,8 +181,6 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 							triggersOverlapEvent: i.triggersOverlapEvent,
 						},
 					}
-
-				//	x, y = i.tx, i.ty
 
 				case *Animation:
 					a := img.(*Animation)
@@ -212,10 +209,62 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 						},
 					}
 
-				//	x, y = a.tx, a.ty
-
 				default:
 					panic("Invalid image type")
+				}
+
+				// tile overlap events
+				less := func(a, b *isoRendererImage) bool {
+					var ty1, ty2 float64
+
+					img := a.img
+					_, h := img.Size()
+
+					if a.isTile {
+						ty1 = img.ty + float64(h-a.tileHeight/8)
+					} else {
+						ty1 = img.ty + float64(h)
+					}
+
+					img = b.img
+					_, h = img.Size()
+
+					if b.isTile {
+						ty2 = img.ty + float64(h-b.tileHeight/8)
+					} else {
+						ty2 = img.ty + float64(h)
+					}
+
+					return ty1 < ty2
+				}
+
+				if r.tilemap.OverlapEvent != nil && tmpImage.img.triggersOverlapEvent {
+					for _, tile := range topTiles {
+						if !less(tmpImage, tile) {
+							continue
+						}
+
+						ax := int(tmpImage.img.tx + tmpImage.img.ox)
+						ay := int(tmpImage.img.ty + tmpImage.img.oy)
+						aw, ah := tmpImage.img.Size()
+
+						bx, by := int(tile.img.tx), int(tile.img.ty)
+						bw, bh := tile.img.Size()
+
+						rect1 := image.Rect(ax, ay, ax+aw, ay+ah)
+						rect2 := image.Rect(bx, by, bx+bw, by+bh)
+
+						if rect1.Overlaps(rect2) {
+							eventState := r.tileEventStates[tile.tilePos]
+
+							if !eventState.complete {
+								r.tileEventStates[tile.tilePos] = tileEventState{
+									complete: true,
+									state:    r.tilemap.OverlapEvent(true, tile.img, eventState.state),
+								}
+							}
+						}
+					}
 				}
 
 				r.drawQueue = append(r.drawQueue, tmpImage)
@@ -255,105 +304,10 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 			// fix this
 			r.drawQueue = append(layers[0], r.drawQueue...)
 
+			// draw
 			for _, isoImage := range r.drawQueue {
-				img := isoImage.img
 
-				op := new(ebiten.DrawImageOptions)
-				w, h := img.Size()
-
-				op.GeoM.Scale(img.sx, img.sy)
-				op.GeoM.Translate(
-					-img.originX*float64(w),
-					-img.originY*float64(h),
-				)
-				op.GeoM.Rotate(img.d)
-				op.GeoM.Translate(
-					img.originX*float64(w),
-					img.originY*float64(h),
-				)
-
-				x, y := img.tx+img.ox, img.ty+img.oy
-				if img.roundTranslations {
-					x, y = math.Round(x), math.Round(y)
-				}
-
-				op.GeoM.Translate(
-					x-cx,
-					y-cy,
-				)
-
-				op.ColorM.Scale(img.r, img.g, img.b, img.alpha)
-
-				screen.DrawImage(img.img, op)
-			}
-
-			r.drawQueue = r.drawQueue[:0]
-		},
-	)
-
-	/*
-		for _, img := range r.imgs {
-
-			less := func(a, b *isoRendererImage) bool {
-				var ty1, ty2 float64
-
-				img := a.img
-				_, h := img.Size()
-
-				if a.isTile {
-					ty1 = img.ty + float64(h-a.tileHeight/8)
-				} else {
-					ty1 = img.ty + float64(h)
-				}
-
-				img = b.img
-				_, h = img.Size()
-
-				if b.isTile {
-					ty2 = img.ty + float64(h-b.tileHeight/8)
-				} else {
-					ty2 = img.ty + float64(h)
-				}
-
-				return ty1 < ty2
-			}
-
-			if r.tilemap.OverlapEvent != nil && tmpImage.img.triggersOverlapEvent {
-				for _, tile := range topTiles {
-					if !less(tmpImage, tile) {
-						continue
-					}
-
-					ax := int(tmpImage.img.tx + tmpImage.img.ox)
-					ay := int(tmpImage.img.ty + tmpImage.img.oy)
-					aw, ah := tmpImage.img.Size()
-
-					bx, by := int(tile.img.tx), int(tile.img.ty)
-					bw, bh := tile.img.Size()
-
-					rect1 := image.Rect(ax, ay, ax+aw, ay+ah)
-					rect2 := image.Rect(bx, by, bx+bw, by+bh)
-
-					if rect1.Overlaps(rect2) {
-						eventState := r.tileEventStates[tile.tilePos]
-
-						if !eventState.complete {
-							r.tileEventStates[tile.tilePos] = tileEventState{
-								complete: true,
-								state:    r.tilemap.OverlapEvent(true, tile.img, eventState.state),
-							}
-						}
-					}
-				}
-			}
-
-			layers[len(layers)-1] = append(layers[len(layers)-1], tmpImage)
-		}
-
-		for i, layer := range layers {
-
-			for _, isoImage := range layer {
-				if i == len(layers)-1 && r.tilemap.OverlapEvent != nil && isoImage.isTile {
+				if r.tilemap.OverlapEvent != nil && isoImage.isTile {
 					event := r.tileEventStates[isoImage.tilePos]
 					if !event.complete {
 						event.state = r.tilemap.OverlapEvent(false, isoImage.img, event.state)
@@ -393,6 +347,8 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 
 				screen.DrawImage(img.img, op)
 			}
-		}
-	*/
+
+			r.drawQueue = r.drawQueue[:0]
+		},
+	)
 }
