@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/split-cube-studios/ardent"
+	"github.com/split-cube-studios/ardent/assetutil"
 	"github.com/split-cube-studios/ardent/engine"
 )
 
@@ -22,12 +23,11 @@ func main() {
 		},
 	)
 
-	// get component factory
-	component := game.Component()
-
 	// create new renderer and image
-	renderer := component.NewRenderer()
-	image, _ := component.NewImageFromAssetPath("scs.asset")
+	renderer := game.NewRenderer()
+
+	assetutil.CreateAssets("./examples/image")
+	image, _ := game.NewImageFromAssetPath("./examples/image/scs.asset")
 
 	// add image to renderer
 	renderer.AddImage(image)

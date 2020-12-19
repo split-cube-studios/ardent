@@ -2,7 +2,10 @@ package main
 
 import (
 	"github.com/split-cube-studios/ardent"
+	"github.com/split-cube-studios/ardent/assetutil"
 	"github.com/split-cube-studios/ardent/engine"
+	"log"
+	"os"
 )
 
 var (
@@ -23,7 +26,7 @@ func main() {
 		// tick function
 		func() {
 			// change animation every 120 ticks
-			if counter%120 == 0 {
+			if counter%120 == 0 && animation != nil {
 				animation.SetState(animations[state%4])
 				state++
 			}
@@ -35,12 +38,15 @@ func main() {
 		},
 	)
 
-	// get component factory
-	component := game.Component()
-
 	// create new renderer and animation
-	renderer := component.NewRenderer()
-	animation, _ = component.NewAnimationFromAssetPath("animation.asset")
+	renderer := game.NewRenderer()
+	assetutil.CreateAssets("./examples/animation")
+	animation, err := game.NewAnimationFromAssetPath("./examples/animation/animation.asset")
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
+	animation.SetState(animations[0])
 	animation.Scale(4, 4)
 
 	// add animation to renderer

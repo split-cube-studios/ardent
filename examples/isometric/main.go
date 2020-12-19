@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/split-cube-studios/ardent"
+	"github.com/split-cube-studios/ardent/assetutil"
 	"github.com/split-cube-studios/ardent/engine"
 )
 
@@ -47,10 +48,8 @@ func main() {
 		},
 	)
 
-	// get component factory
-	component := game.Component()
-
-	atlas, _ := component.NewAtlasFromAssetPath("tiles.asset")
+	assetutil.CreateAssets("./examples/isometric")
+	atlas, _ := game.NewAtlasFromAssetPath("./examples/isometric/tiles.asset")
 
 	data := [2][][]int{
 		{
@@ -75,18 +74,21 @@ func main() {
 		3: atlas.GetImage("tree"),
 	}
 
-	tilemap := component.NewTilemap(128, data, mapper)
-	camera := component.NewCamera()
-	animation, _ = component.NewAnimationFromAssetPath("../animation/animation.asset")
+	tilemap := game.NewTilemap(128, data, mapper, func(bool, engine.Image, interface{}) interface{} {
+		return nil
+	})
+	camera := game.NewCamera()
+	animation, _ = game.NewAnimationFromAssetPath("./examples/animation/animation.asset")
 	animation.SetState("sw")
 
-	camera.LookAt(64, 128)
+	camera.LookAt(64, 128, 0)
 
-	renderer := component.NewIsoRenderer()
+	renderer := game.NewIsoRenderer()
 	renderer.SetTilemap(tilemap)
 	renderer.SetCamera(camera)
 	renderer.AddImage(animation)
 
-	game.AddIsoRenderer(renderer)
+	game.AddRenderer(renderer)
+
 	game.Run()
 }

@@ -34,14 +34,11 @@ func main() {
 		},
 	)
 
-	// get component factory
-	component := game.Component()
-
 	// create new renderer
-	renderer := component.NewRenderer()
+	renderer := game.NewRenderer()
 
 	// create new atlas from asset file
-	atlas, _ := component.NewAtlasFromAssetPath("../atlas/atlas.asset")
+	atlas, _ := game.NewAtlasFromAssetPath("./examples/atlas/atlas.asset")
 
 	// get atlas subimage
 	stripes = atlas.GetImage("stripes")

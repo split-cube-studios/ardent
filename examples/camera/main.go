@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/split-cube-studios/ardent"
+	"github.com/split-cube-studios/ardent/assetutil"
 	"github.com/split-cube-studios/ardent/engine"
 )
 
@@ -32,7 +33,7 @@ func tick() {
 	}
 
 	stripes.Translate(x, y)
-	camera.LookAt(x+float64(stripeWidth/2), y+float64(stripeHeight/2))
+	camera.LookAt(x+float64(stripeWidth/2), y+float64(stripeHeight/2), 0)
 }
 
 func main() {
@@ -53,17 +54,15 @@ func main() {
 		},
 	)
 
-	// get component factory
-	component := game.Component()
-
 	// create new renderer
-	renderer := component.NewRenderer()
+	renderer := game.NewRenderer()
 
 	// create new camera
-	camera = component.NewCamera()
+	camera = game.NewCamera()
 
 	// create new atlas from asset file
-	atlas, _ := component.NewAtlasFromAssetPath("../atlas/atlas.asset")
+	assetutil.CreateAssets("./examples/atlas")
+	atlas, _ := game.NewAtlasFromAssetPath("./examples/atlas/atlas.asset")
 
 	// get atlas subimages
 	stripes = atlas.GetImage("stripes")
