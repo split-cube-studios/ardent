@@ -2,6 +2,7 @@ package engine
 
 import (
 	"image"
+	"math"
 )
 
 type Context struct {
@@ -53,7 +54,14 @@ func (c *Context) Tick() {
 		float64(vp.Min.X),
 		float64(vp.Min.Y),
 	}
-	c.partitionMap.Tick(pos, 1, c.updateEntities)
+
+	// cell dist to load from partition map
+	pcells := int(math.Max(
+		float64(vp.Dx()),
+		float64(vp.Dy()),
+	))/250 - 1
+
+	c.partitionMap.Tick(pos, pcells, c.updateEntities)
 }
 
 func (c *Context) updateEntities(entries []PartitionEntry) {

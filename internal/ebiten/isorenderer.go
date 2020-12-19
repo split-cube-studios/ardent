@@ -140,12 +140,18 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 		float64(vp.Min.Y),
 	}
 
+	// cell dist to load from partition map
+	pcells := int(math.Max(
+		float64(vp.Dx()),
+		float64(vp.Dy()),
+	))/250 - 1
+
 	layers := r.tilemapToIsoLayers(cx, cy)
 	topTiles := layers[len(layers)-1]
 
 	r.partitionMap.Tick(
 		pos,
-		1,
+		pcells,
 		func(entries []engine.PartitionEntry) {
 			for _, entry := range entries {
 				img := entry.(engine.Image)
