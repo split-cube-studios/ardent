@@ -1,7 +1,7 @@
 package ebiten
 
 import (
-	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/split-cube-studios/ardent/engine"
 )
 
@@ -46,7 +46,7 @@ func (g *Game) Run() error {
 	ebiten.SetWindowSize(g.w, g.h)
 	ebiten.SetWindowTitle(g.title)
 	ebiten.SetWindowResizable(g.flags&engine.FlagResizable > 0)
-	ebiten.SetRunnableInBackground(g.flags&engine.FlagRunsInBackground > 0)
+	ebiten.SetRunnableOnUnfocused(g.flags&engine.FlagRunsInBackground > 0)
 
 	return ebiten.RunGame(g)
 }
@@ -62,18 +62,19 @@ func (g *Game) Layout(ow, oh int) (int, int) {
 	return g.w, g.h
 }
 
-// Update runs the tick and draw functions.
-func (g *Game) Update(screen *ebiten.Image) error {
+// Update runs the tick functions.
+func (g *Game) Update() error {
 	g.tickFunc()
 
 	for _, renderer := range g.renderers {
 		renderer.Tick()
 	}
 
-	if ebiten.IsDrawingSkipped() {
-		return nil
-	}
+	return nil
+}
 
+// Draw runs the draw functions.
+func (g *Game) Draw(screen *ebiten.Image) {
 	for _, renderer := range g.renderers {
 		renderer.SetViewport(g.w, g.h)
 		switch renderer.(type) {
@@ -83,8 +84,6 @@ func (g *Game) Update(screen *ebiten.Image) error {
 			renderer.(*IsoRenderer).draw(screen)
 		}
 	}
-
-	return nil
 }
 
 // IsFullscreen returns the fullscreen state of the game.

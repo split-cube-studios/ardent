@@ -9,8 +9,8 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/hajimehoshi/ebiten"
-	"github.com/hajimehoshi/ebiten/text"
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/text"
 	"github.com/split-cube-studios/ardent/engine"
 	"github.com/split-cube-studios/ardent/internal/common"
 	"golang.org/x/image/font"
@@ -77,9 +77,8 @@ func (c *component) NewImageFromAssetPath(path string) (engine.Image, error) {
 }
 
 func (c *component) NewImageFromImage(img image.Image) engine.Image {
-	eimg, _ := ebiten.NewImageFromImage(img, ebiten.FilterNearest)
 	return &Image{
-		img:               eimg,
+		img:               ebiten.NewImageFromImage(img),
 		sx:                1,
 		sy:                1,
 		alpha:             1,
@@ -89,7 +88,7 @@ func (c *component) NewImageFromImage(img image.Image) engine.Image {
 }
 
 func (c *component) NewTextImage(txt string, w, h int, face font.Face, clr color.Color) engine.Image {
-	img, _ := ebiten.NewImage(w, h, ebiten.FilterNearest)
+	img := ebiten.NewImage(w, h)
 	text.Draw(img, txt, face, 0, face.Metrics().Height.Round(), clr)
 	return &Image{
 		img:               img,

@@ -1,7 +1,7 @@
 package ebiten
 
 import (
-	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/split-cube-studios/ardent/engine"
 	"github.com/split-cube-studios/ardent/internal/common"
 )
@@ -32,9 +32,8 @@ func (a *Asset) UnmarshalBinary(data []byte) error {
 
 	switch ca.Type {
 	case common.AssetTypeImage:
-		img, _ := ebiten.NewImageFromImage(ca.Img, ebiten.FilterDefault)
 		a.img = Image{
-			img:               img,
+			img:               ebiten.NewImageFromImage(ca.Img),
 			sx:                1,
 			sy:                1,
 			r:                 1,
@@ -45,17 +44,15 @@ func (a *Asset) UnmarshalBinary(data []byte) error {
 			roundTranslations: true,
 		}
 	case common.AssetTypeAtlas:
-		img, _ := ebiten.NewImageFromImage(ca.Img, ebiten.FilterDefault)
 		a.atlas = Atlas{
-			img:     img,
+			img:     ebiten.NewImageFromImage(ca.Img),
 			regions: ca.AtlasMap,
 			cache:   make(map[string]Image),
 		}
 	case common.AssetTypeAnimation:
-		img, _ := ebiten.NewImageFromImage(ca.Img, ebiten.FilterDefault)
 		a.animation = Animation{
 			Image: Image{
-				img:               img,
+				img:               ebiten.NewImageFromImage(ca.Img),
 				sx:                1,
 				sy:                1,
 				r:                 1,
