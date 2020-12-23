@@ -41,7 +41,7 @@ func parseConfigFiles(dir string) (confs []config, err error) {
 		},
 	)
 
-	return confs, err
+	return //nolint:nakedret
 }
 
 // CreateAssets takes a directory path that should contain a yml config file and uses it to produce a .asset file.

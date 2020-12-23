@@ -11,9 +11,6 @@ import (
 
 // Renderer is a simple ebiten renderer.
 type Renderer struct {
-	// unused
-	// imgs   []engine.Image
-
 	camera engine.Camera
 
 	partitionMap *engine.PartitionMap
