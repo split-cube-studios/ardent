@@ -13,8 +13,6 @@ func main() {
 		854,
 		480,
 		engine.FlagResizable,
-		// use Ebiten backend
-		ardent.EBITEN,
 		// tick function
 		func() {},
 		// layout function

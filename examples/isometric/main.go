@@ -24,8 +24,6 @@ func main() {
 		w,
 		h,
 		engine.FlagResizable,
-		// use Ebiten backend
-		ardent.EBITEN,
 		// tick function
 		func() {
 			if game.IsKeyPressed(engine.KeyW) {

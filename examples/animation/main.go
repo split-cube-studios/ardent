@@ -1,11 +1,12 @@
 package main
 
 import (
+	"log"
+	"os"
+
 	"github.com/split-cube-studios/ardent"
 	"github.com/split-cube-studios/ardent/assetutil"
 	"github.com/split-cube-studios/ardent/engine"
-	"log"
-	"os"
 )
 
 var (
@@ -21,8 +22,6 @@ func main() {
 		854,
 		480,
 		engine.FlagResizable,
-		// use Ebiten backend
-		ardent.EBITEN,
 		// tick function
 		func() {
 			// change animation every 120 ticks

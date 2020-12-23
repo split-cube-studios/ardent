@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/split-cube-studios/ardent/assetutil"
 	"log"
 	"math"
 
 	"github.com/split-cube-studios/ardent"
+	"github.com/split-cube-studios/ardent/assetutil"
 	"github.com/split-cube-studios/ardent/engine"
 )
 
@@ -16,8 +16,6 @@ func main() {
 		854,
 		480,
 		engine.FlagResizable,
-		// use Ebiten backend
-		ardent.EBITEN,
 		// tick function
 		func() {},
 		// layout function
