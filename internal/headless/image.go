@@ -1,3 +1,5 @@
+//+build headless
+
 package headless
 
 import "github.com/split-cube-studios/ardent/engine"

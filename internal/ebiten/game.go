@@ -1,4 +1,5 @@
-// Package ebiten contains an engine backend that uses ebiten.
+//+build !headless
+
 package ebiten
 
 import (

@@ -1,4 +1,5 @@
-// Package headless contains a headless engine backend.
+//+build headless
+
 package headless
 
 import "github.com/split-cube-studios/ardent/engine"

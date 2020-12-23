@@ -1,3 +1,5 @@
+//+build headless
+
 package headless
 
 // Animation is a headless engine.Animation.
