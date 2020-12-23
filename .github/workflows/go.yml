@@ -23,6 +23,7 @@ jobs:
 
     - name: Get dependencies
       run: |
+        sudo apt-get install libgl1-mesa-dev
         go get -v -t -d ./...
 
     # - name: Build
