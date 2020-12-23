@@ -1,3 +1,4 @@
+// Package ardent is a cross-platform 2D game engine.
 package ardent
 
 import "github.com/split-cube-studios/ardent/engine"

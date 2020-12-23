@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/split-cube-studios/ardent"
 	"github.com/split-cube-studios/ardent/assetutil"
 	"github.com/split-cube-studios/ardent/engine"
@@ -18,7 +20,7 @@ const (
 	w, h = 854, 480
 )
 
-// tick function
+// tick function.
 func tick() {
 	if game.IsKeyPressed(engine.KeyW) {
 		y -= 2
@@ -60,6 +62,7 @@ func main() {
 
 	// create new atlas from asset file
 	assetutil.CreateAssets("./examples/atlas")
+
 	atlas, _ := game.NewAtlasFromAssetPath("./examples/atlas/atlas.asset")
 
 	// get atlas subimages
@@ -81,5 +84,9 @@ func main() {
 
 	// add renderer to game and start game
 	game.AddRenderer(renderer)
-	game.Run()
+
+	err := game.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
 }

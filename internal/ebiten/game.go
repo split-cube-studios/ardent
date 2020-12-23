@@ -1,3 +1,5 @@
+//+build !headless
+
 package ebiten
 
 import (
@@ -59,6 +61,7 @@ func (g *Game) AddRenderer(renderer ...engine.Renderer) {
 // Layout is called when the window resizes.
 func (g *Game) Layout(ow, oh int) (int, int) {
 	g.w, g.h = g.layoutFunc(ow, oh)
+
 	return g.w, g.h
 }
 
@@ -77,11 +80,12 @@ func (g *Game) Update() error {
 func (g *Game) Draw(screen *ebiten.Image) {
 	for _, renderer := range g.renderers {
 		renderer.SetViewport(g.w, g.h)
-		switch renderer.(type) {
+
+		switch r := renderer.(type) {
 		case *Renderer:
-			renderer.(*Renderer).draw(screen)
+			r.draw(screen)
 		case *IsoRenderer:
-			renderer.(*IsoRenderer).draw(screen)
+			r.draw(screen)
 		}
 	}
 }
