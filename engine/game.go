@@ -1,7 +1,11 @@
+// Package engine contains generic implementations of game logic and asset management.
 package engine
 
 const (
+	// FlagResizable indicates that the viewport may be resized.
 	FlagResizable = 1 << iota
+
+	// FlagRunsInBackground indicates that logic will continue when the game is unfocused.
 	FlagRunsInBackground
 )
 

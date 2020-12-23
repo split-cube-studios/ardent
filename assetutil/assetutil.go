@@ -1,12 +1,14 @@
+// Package assetutil contains utilities for generating, parsing, and managing assets.
 package assetutil
 
 import (
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"gopkg.in/yaml.v2"
 )
 
 func parseConfigFiles(dir string) (confs []config, err error) {
@@ -39,10 +41,10 @@ func parseConfigFiles(dir string) (confs []config, err error) {
 		},
 	)
 
-	return
+	return confs, err
 }
 
-// CreateAssets takes a directory path that should contain a yml config file and uses it to produce a .asset file
+// CreateAssets takes a directory path that should contain a yml config file and uses it to produce a .asset file.
 func CreateAssets(dir string) {
 	confs, err := parseConfigFiles(dir)
 	if err != nil {
@@ -63,7 +65,7 @@ func CreateAssets(dir string) {
 		if err := ioutil.WriteFile(
 			strings.Replace(conf.filepath, ".png", ".asset", 1),
 			d,
-			0777,
+			0o600,
 		); err != nil {
 			log.Fatal(err)
 		}

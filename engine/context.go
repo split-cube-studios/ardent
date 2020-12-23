@@ -5,6 +5,7 @@ import (
 	"math"
 )
 
+// Context is a rendering context.
 type Context struct {
 	Renderer
 	Collider
@@ -15,6 +16,7 @@ type Context struct {
 	entitySwap []Entity
 }
 
+// NewContext creates a Context with the given Renderer and Collider.
 func NewContext(renderer Renderer, collider Collider) *Context {
 	ctx := &Context{
 		Renderer: renderer,
@@ -28,31 +30,35 @@ func NewContext(renderer Renderer, collider Collider) *Context {
 	return ctx
 }
 
+// AddEntity adds Entities to the Context.
 func (c *Context) AddEntity(entities ...Entity) {
 	c.entitySwap = append(c.entitySwap, entities...)
 }
 
+// GetEntities gets the Context's Entities.
 func (c *Context) GetEntities(class string) []Entity {
 	return c.entities[class]
 }
 
+// Tick updates the Context's internal state.
 func (c *Context) Tick() {
 	for i, e := range c.entitySwap {
 		if c.Collider != nil {
 			e.SetCollider(c.Collider)
 		}
-		c.AddImage(e.Images()...)
 
+		c.AddImage(e.Images()...)
 		c.partitionMap.Add(e)
 
 		c.entitySwap[i] = nil
 	}
+
 	c.entitySwap = c.entitySwap[:0]
 
 	vp := c.Viewport()
 	pos := Vec2{
-		float64(vp.Min.X),
-		float64(vp.Min.Y),
+		X: float64(vp.Min.X),
+		Y: float64(vp.Min.Y),
 	}
 
 	// cell dist to load from partition map

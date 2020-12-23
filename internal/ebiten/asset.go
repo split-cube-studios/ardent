@@ -6,24 +6,29 @@ import (
 	"github.com/split-cube-studios/ardent/internal/common"
 )
 
+// Asset is an engine.Asset.
 type Asset struct {
 	img       Image
 	atlas     Atlas
 	animation Animation
 }
 
+// ToImage implements engine.Asset.
 func (a *Asset) ToImage() engine.Image {
 	return &a.img
 }
 
+// ToAtlas implements engine.Asset.
 func (a *Asset) ToAtlas() engine.Atlas {
 	return &a.atlas
 }
 
+// ToAnimation implements engine.Asset.
 func (a *Asset) ToAnimation() engine.Animation {
 	return &a.animation
 }
 
+// UnmarshalBinary implements encoding.BinaryUnmarshaler.
 func (a *Asset) UnmarshalBinary(data []byte) error {
 	ca := common.NewAsset()
 	if err := ca.UnmarshalBinary(data); err != nil {

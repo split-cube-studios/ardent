@@ -1,5 +1,6 @@
 package engine
 
+// Input describes various input detection methods.
 type Input interface {
 	// Keyboard
 	IsAnyKeyPressed() bool
@@ -17,12 +18,16 @@ type Input interface {
 	SetCursorMode(CursorMode)
 }
 
-// CursorMode indication
+// CursorMode indicates a cursor display mode.
 type CursorMode byte
 
-// Cursor modes
 const (
-	CURSOR_VISIBLE CursorMode = 1 << iota
-	CURSOR_HIDDEN
-	CURSOR_CAPTURED
+	// CursorModeVisible indicates normal cursor display.
+	CursorModeVisible CursorMode = 1 << iota
+
+	// CursorModeHidden indicates a hidden cursor that may escape the window.
+	CursorModeHidden
+
+	// CursorModeCaptured indicates a hidden cursor that may not escape the window.
+	CursorModeCaptured
 )

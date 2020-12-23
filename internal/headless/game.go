@@ -1,16 +1,14 @@
+// Package headless contains a headless engine backend.
 package headless
 
-import (
-	"github.com/split-cube-studios/ardent/engine"
-)
+import "github.com/split-cube-studios/ardent/engine"
 
-// Game is a headless implementation
-// of engine.Game.
+// Game is a headless implementation of engine.Game.
 type Game struct {
-	tickFunc func()
-
 	component
 	Input
+
+	tickFunc func()
 }
 
 // NewGame returns an instantiated game.
@@ -29,7 +27,6 @@ func (g *Game) Run() error {
 	for {
 		g.tickFunc()
 	}
-	return nil
 }
 
 // AddRenderer adds a renderer to the draw stack.

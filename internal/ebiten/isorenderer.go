@@ -10,6 +10,7 @@ import (
 	"github.com/split-cube-studios/ardent/internal/common"
 )
 
+// IsoRenderer is an engine.IsoRenderer.
 type IsoRenderer struct {
 	Renderer
 
@@ -31,6 +32,7 @@ type tileEventState struct {
 	state    interface{}
 }
 
+// NewIsoRenderer creates an empty IsoRenderer.
 func NewIsoRenderer() *IsoRenderer {
 	r := &IsoRenderer{
 		Renderer: *NewRenderer(),
@@ -40,6 +42,7 @@ func NewIsoRenderer() *IsoRenderer {
 	return r
 }
 
+// SetTilemap implements engine.IsoRenderer.
 func (r *IsoRenderer) SetTilemap(tilemap engine.Tilemap) {
 	r.tilemap = tilemap.(*common.Tilemap)
 	r.tileEventStates = make(map[[3]int]tileEventState)
@@ -98,8 +101,8 @@ func (r *IsoRenderer) tilemapToIsoLayers(cx, cy float64) [][]*isoRendererImage {
 					continue
 				}
 
-				_, h := img.Size()
 				if i != 0 {
+					_, h := img.Size()
 					y -= float64(h - tw/4)
 				}
 
@@ -136,8 +139,8 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 
 	vp := r.Viewport()
 	pos := engine.Vec2{
-		float64(vp.Min.X),
-		float64(vp.Min.Y),
+		X: float64(vp.Min.X),
+		Y: float64(vp.Min.Y),
 	}
 
 	// cell dist to load from partition map
@@ -161,35 +164,33 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 
 				var tmpImage *isoRendererImage
 
-				switch img.(type) {
+				switch a := img.(type) {
 				case *Image:
-					i := img.(*Image)
-					w, h := i.Size()
+					w, h := a.Size()
 					tmpImage = &isoRendererImage{
 						img: &Image{
-							img:                  i.img,
-							tx:                   i.tx - i.originX*float64(w),
-							ty:                   i.ty - i.originY*float64(h),
-							ox:                   i.ox,
-							oy:                   i.oy,
-							sx:                   i.sx,
-							sy:                   i.sy,
-							originX:              i.originX,
-							originY:              i.originY,
-							d:                    i.d,
-							z:                    i.z,
-							r:                    i.r,
-							g:                    i.g,
-							b:                    i.b,
-							alpha:                i.alpha,
-							renderable:           i.renderable,
-							roundTranslations:    i.roundTranslations,
-							triggersOverlapEvent: i.triggersOverlapEvent,
+							img:                  a.img,
+							tx:                   a.tx - a.originX*float64(w),
+							ty:                   a.ty - a.originY*float64(h),
+							ox:                   a.ox,
+							oy:                   a.oy,
+							sx:                   a.sx,
+							sy:                   a.sy,
+							originX:              a.originX,
+							originY:              a.originY,
+							d:                    a.d,
+							z:                    a.z,
+							r:                    a.r,
+							g:                    a.g,
+							b:                    a.b,
+							alpha:                a.alpha,
+							renderable:           a.renderable,
+							roundTranslations:    a.roundTranslations,
+							triggersOverlapEvent: a.triggersOverlapEvent,
 						},
 					}
 
 				case *Animation:
-					a := img.(*Animation)
 					a.tick()
 					w, h := a.Size()
 					tmpImage = &isoRendererImage{
@@ -312,7 +313,6 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 
 			// draw
 			for _, isoImage := range r.drawQueue {
-
 				if r.tilemap.OverlapEvent != nil && isoImage.isTile {
 					event := r.tileEventStates[isoImage.tilePos]
 					if !event.complete {

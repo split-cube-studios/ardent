@@ -14,18 +14,22 @@ func (r Renderer) AddImage(images ...engine.Image) {
 	// NOOP
 }
 
+// SetCamera implements engine.Renderer.
 func (r Renderer) SetCamera(camera engine.Camera) {
-
 }
 
+// ScreenToWorld implements engine.Renderer.
 func (r Renderer) ScreenToWorld(screen engine.Vec2) engine.Vec2 {
 	return engine.Vec2{}
 }
 
+// SetViewport implements engine.Renderer.
 func (r Renderer) SetViewport(w, h int) {}
 
+// Tick implements engine.Renderer.
 func (r Renderer) Tick() {}
 
+// Viewport implements engine.Renderer.
 func (r Renderer) Viewport() image.Rectangle {
 	return image.Rect(0, 0, 0, 0)
 }

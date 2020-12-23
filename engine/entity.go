@@ -1,5 +1,6 @@
 package engine
 
+// Entity is a basic game entity.
 type Entity interface {
 	Tick()
 
@@ -16,6 +17,7 @@ type Entity interface {
 	IsDisposed() bool
 }
 
+// CoreEntity is a default Entity implementation.
 type CoreEntity struct {
 	Vec2
 	prevPos Vec2
@@ -26,10 +28,12 @@ type CoreEntity struct {
 	disposed bool
 }
 
+// Tick updates the CoreEntity's position.
 func (e *CoreEntity) Tick() {
 	if e.collider != nil {
 		e.Vec2 = e.collider.Resolve(e.prevPos, e.Vec2)
 	}
+
 	e.prevPos = e.Vec2
 
 	for _, img := range e.images {
@@ -37,25 +41,31 @@ func (e *CoreEntity) Tick() {
 	}
 }
 
+// SetCollider sets the CoreEntity's Collider.
 func (e *CoreEntity) SetCollider(collider Collider) {
 	e.collider = collider
 }
 
+// Position gets the CoreEntity's current position.
 func (e *CoreEntity) Position() Vec2 {
 	return e.Vec2
 }
 
+// AddImage adds an Image to the CoreEntity.
 func (e *CoreEntity) AddImage(image ...Image) {
 	for _, img := range image {
 		img.Translate(e.X, e.Y)
 	}
+
 	e.images = append(e.images, image...)
 }
 
+// Images gets the CoreEntity's Images.
 func (e *CoreEntity) Images() []Image {
 	return e.images
 }
 
+// Dispose marks the CoreEntity as disposed, and disposes its Images.
 func (e *CoreEntity) Dispose() {
 	e.disposed = true
 	for _, img := range e.images {
@@ -63,6 +73,7 @@ func (e *CoreEntity) Dispose() {
 	}
 }
 
+// IsDisposed checks if the CoreEntity has been disposed.
 func (e *CoreEntity) IsDisposed() bool {
 	return e.disposed
 }

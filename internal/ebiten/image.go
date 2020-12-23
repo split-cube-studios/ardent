@@ -5,7 +5,7 @@ import (
 	"github.com/split-cube-studios/ardent/engine"
 )
 
-// Image is an ebiten implementation of engine.Image
+// Image is an ebiten implementation of engine.Image.
 type Image struct {
 	img *ebiten.Image
 
@@ -32,7 +32,7 @@ func (i *Image) Translate(x, y float64) {
 	i.tx, i.ty = x, y
 }
 
-// Offset applies the translation offset
+// Offset applies the translation offset.
 func (i *Image) Offset(x, y float64) {
 	i.ox, i.oy = x, y
 }
@@ -110,10 +110,15 @@ func (i *Image) IsDisposed() bool {
 	return i.disposed
 }
 
+// Position implements engine.Image.
 func (i *Image) Position() engine.Vec2 {
-	return engine.Vec2{i.tx, i.ty}
+	return engine.Vec2{
+		X: i.tx,
+		Y: i.ty,
+	}
 }
 
+// Class implements engine.Image.
 func (i *Image) Class() string {
 	return "image"
 }

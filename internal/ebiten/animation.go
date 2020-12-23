@@ -7,6 +7,7 @@ import (
 	"github.com/split-cube-studios/ardent/internal/common"
 )
 
+// Animation is an engine.Animation.
 type Animation struct {
 	Image
 	state string
@@ -20,6 +21,7 @@ type Animation struct {
 	paused bool
 }
 
+// SetState implements engine.Animation.
 func (a *Animation) SetState(state string) {
 	if a.state == state {
 		return
@@ -29,20 +31,24 @@ func (a *Animation) SetState(state string) {
 	a.Reset()
 }
 
+// SetTickCount implements engine.Animation.
 func (a *Animation) SetTickCount(count int) {
 	fps := a.anims[a.state].Fps
 
 	a.frameCounter = uint16(count) / (60 / fps)
 }
 
+// Play implements engine.Animation.
 func (a *Animation) Play() {
 	a.paused = false
 }
 
+// Pause implements engine.Animation.
 func (a *Animation) Pause() {
 	a.paused = true
 }
 
+// Reset implements engine.Animation.
 func (a *Animation) Reset() {
 	a.fpsCounter, a.frameCounter = 0, 0
 }
@@ -56,12 +62,14 @@ func (a *Animation) tick() {
 	if a.fpsCounter == 60/fps {
 		a.frameCounter++
 		a.fpsCounter = 0
+
 		return
 	}
 
 	a.fpsCounter++
 }
 
+// Size implements engine.Image.
 func (a *Animation) Size() (int, int) {
 	return int(a.w), int(a.h)
 }

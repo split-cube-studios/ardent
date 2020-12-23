@@ -7,6 +7,7 @@ import (
 	"golang.org/x/image/font"
 )
 
+// Component produces engine components.
 type Component interface {
 	NewAssetFromPath(string) (Asset, error)
 

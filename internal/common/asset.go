@@ -1,41 +1,74 @@
+// Package common contains basic structures for use in engine backends.
 package common
 
 import (
 	"bytes"
 	"encoding/binary"
+	"errors"
 	"fmt"
 	"image"
 	"image/png"
 )
 
+// ErrInvalidFiletype occurs when an asset file is of an invalid type.
+var ErrInvalidFiletype = errors.New("invalid filetype")
+
+// WrongNumBytesError occurs when an incorrect number of bytes is read.
+type WrongNumBytesError struct {
+	Expect, Got int
+}
+
+// Error implements error.
+func (w WrongNumBytesError) Error() string {
+	return fmt.Sprintf("expected %d bytes, got %d", w.Expect, w.Got)
+}
+
+// InvalidAssetType occurs when an invalid AssetType value is encountered.
+type InvalidAssetType AssetType
+
+// Error implements error.
+func (i InvalidAssetType) Error() string {
+	return fmt.Sprintf("invalid asset type: %X", AssetType(i))
+}
+
+// AssetType indicates a certain type of asset.
 type AssetType byte
 
 const (
+	// AssetTypeImage indicates a static image asset.
 	AssetTypeImage AssetType = 1 << iota
+
+	// AssetTypeAtlas indicates an image atlas asset.
 	AssetTypeAtlas
+
+	// AssetTypeAnimation indicates an animated image asset.
 	AssetTypeAnimation
+
+	// AssetTypeSound indicates an audio asset.
 	AssetTypeSound
 )
 
+// Asset is a basic implementation of engine.Asset.
 type Asset struct {
-	Type AssetType
-
 	Img      image.Image
 	AtlasMap map[string]AtlasRegion
 
-	AnimWidth, AnimHeight uint16
-	AnimationMap          map[string]Animation
+	AnimationMap map[string]Animation
+	AnimWidth    uint16
+	AnimHeight   uint16
+
+	Type AssetType
 }
 
-const invalidAssetType = "Invalid asset type: %X"
-
+// NewAsset creates an empty Asset.
 func NewAsset() *Asset {
 	return &Asset{
-		AtlasMap:     make(map[string]AtlasRegion, 0),
-		AnimationMap: make(map[string]Animation, 0),
+		AtlasMap:     make(map[string]AtlasRegion),
+		AnimationMap: make(map[string]Animation),
 	}
 }
 
+// MarshalBinary implements encoding.BinaryMarshaler.
 func (a *Asset) MarshalBinary() ([]byte, error) {
 	buf := new(bytes.Buffer)
 
@@ -88,7 +121,7 @@ func (a *Asset) MarshalBinary() ([]byte, error) {
 	case AssetTypeSound:
 		// TODO
 	default:
-		panic(fmt.Sprintf(invalidAssetType, byte(a.Type)))
+		return nil, InvalidAssetType(a.Type)
 	}
 
 	if a.Type != AssetTypeSound {
@@ -100,6 +133,7 @@ func (a *Asset) MarshalBinary() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
+// UnmarshalBinary implements encoding.BinaryUnmarshaler.
 func (a *Asset) UnmarshalBinary(data []byte) error {
 	buf := bytes.NewBuffer(data)
 
@@ -109,7 +143,7 @@ func (a *Asset) UnmarshalBinary(data []byte) error {
 	}
 
 	if magic[:len(magic)-1] != "ardent" {
-		return fmt.Errorf("Invalid filetype")
+		return ErrInvalidFiletype
 	}
 
 	t, err := buf.ReadByte()
@@ -137,7 +171,11 @@ func (a *Asset) UnmarshalBinary(data []byte) error {
 				if err != nil {
 					return err
 				}
-				return fmt.Errorf("Expected %d bytes, got %d", len(regData), n)
+
+				return WrongNumBytesError{
+					Expect: len(regData),
+					Got:    n,
+				}
 			}
 
 			a.AtlasMap[k[:len(k)-1]] = AtlasRegion{
@@ -159,7 +197,11 @@ func (a *Asset) UnmarshalBinary(data []byte) error {
 			if err != nil {
 				return err
 			}
-			return fmt.Errorf("Expected %d bytes, got %d", len(animSize), n)
+
+			return WrongNumBytesError{
+				Expect: len(animSize),
+				Got:    n,
+			}
 		}
 
 		a.AnimWidth = binary.LittleEndian.Uint16(animSize[:2])
@@ -176,7 +218,11 @@ func (a *Asset) UnmarshalBinary(data []byte) error {
 				if err != nil {
 					return err
 				}
-				return fmt.Errorf("Expected %d bytes, go %d", len(animData), n)
+
+				return WrongNumBytesError{
+					Expect: len(animData),
+					Got:    n,
+				}
 			}
 
 			anim := Animation{
@@ -193,8 +239,9 @@ func (a *Asset) UnmarshalBinary(data []byte) error {
 		}
 
 	case AssetTypeSound:
+		// TODO
 	default:
-		panic(fmt.Sprintf(invalidAssetType, t))
+		return InvalidAssetType(a.Type)
 	}
 
 	if a.Type == AssetTypeSound {

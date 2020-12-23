@@ -6,14 +6,17 @@ import (
 	"github.com/split-cube-studios/ardent/engine"
 )
 
+// Collider is a basic implementation of engine.Collider.
 type Collider struct {
 	m *Tilemap
 }
 
+// SetTilemap sets the Collider's Tilemap.
 func (c *Collider) SetTilemap(m engine.Tilemap) {
 	c.m = m.(*Tilemap)
 }
 
+// Resolve handles a collision.
 func (c *Collider) Resolve(src, dst engine.Vec2) engine.Vec2 {
 	if c.m == nil {
 		return dst
@@ -46,16 +49,17 @@ func (c *Collider) Resolve(src, dst engine.Vec2) engine.Vec2 {
 		bottom = true
 	}
 
-	var nix, niy int
+	nix, niy := ix, iy
+
 	switch {
 	case !right && !bottom:
-		nix, niy = ix-1, iy
+		nix--
 	case right && !bottom:
-		nix, niy = ix, iy-1
+		niy--
 	case !right && bottom:
-		nix, niy = ix, iy+1
+		niy++
 	case right && bottom:
-		nix, niy = ix+1, iy
+		nix++
 	}
 
 	// check secondary collision
@@ -83,13 +87,13 @@ func (c *Collider) Resolve(src, dst engine.Vec2) engine.Vec2 {
 
 		switch {
 		case !right && !bottom:
-			nix, niy = nix-1, niy
+			nix--
 		case right && !bottom:
-			nix, niy = nix, niy-1
+			niy--
 		case !right && bottom:
-			nix, niy = nix, niy+1
+			niy++
 		case right && bottom:
-			nix, niy = nix+1, niy
+			nix++
 		}
 	}
 

@@ -1,5 +1,6 @@
 package engine
 
+// Keyboard keys.
 const (
 	Key0 = iota
 	Key1
@@ -103,6 +104,7 @@ const (
 	KeyShift
 )
 
+// Mouse buttons.
 const (
 	MouseButtonLeft = iota
 	MouseButtonRight

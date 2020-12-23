@@ -9,17 +9,14 @@ type PartitionMap struct {
 	linearBuffer []PartitionEntry
 }
 
-// Partionable is a type that can be
-// used in a PartitionMap.
+// PartitionEntry is a type that can be used in a PartitionMap.
 type PartitionEntry interface {
 	IsDisposed() bool
 	Position() Vec2
 	Class() string
 }
 
-// NewPartitionMap returns a PartitionMap
-// with a given range interval, and initial map
-// bucket count.
+// NewPartitionMap returns a PartitionMap with a given range interval, and initial map bucket count.
 func NewPartitionMap(partitionSize, bucketCount int) *PartitionMap {
 	return &PartitionMap{
 		partitions:    make(map[[2]int][]PartitionEntry, bucketCount),
@@ -28,8 +25,7 @@ func NewPartitionMap(partitionSize, bucketCount int) *PartitionMap {
 	}
 }
 
-// Add inserts a PartitionEntry into the PartitionMap,
-// and returns the map key.
+// Add inserts a PartitionEntry into the PartitionMap, and returns the map key.
 func (pm *PartitionMap) Add(e PartitionEntry) [2]int {
 	key := pm.positionToKey(e.Position())
 
@@ -52,7 +48,6 @@ func (pm *PartitionMap) Tick(
 	// update buffer and clear partitions
 	for x := px - size; x <= px+size; x++ {
 		for y := py - size; y <= py+size; y++ {
-
 			key := [2]int{x, y}
 			entries := pm.partitions[key]
 
@@ -71,6 +66,7 @@ func (pm *PartitionMap) Tick(
 			for i := 0; i < len(entries); i++ {
 				entries[i] = nil
 			}
+
 			pm.partitions[key] = entries[:0]
 		}
 	}
@@ -78,7 +74,6 @@ func (pm *PartitionMap) Tick(
 	// flatten buffer for updates
 	for _, entries := range pm.buffer {
 		pm.linearBuffer = append(pm.linearBuffer, entries...)
-
 	}
 
 	if tickFunc != nil {
@@ -94,6 +89,7 @@ func (pm *PartitionMap) Tick(
 			pm.Add(entry)
 		}
 	}
+
 	pm.linearBuffer = pm.linearBuffer[:0]
 }
 
