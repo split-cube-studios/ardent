@@ -27,9 +27,6 @@ jobs:
 
     - name: Test
       run: go test -v -tags headless ./...
-    
-    - name: Run golangci-lint
-      uses: golangci/golangci-lint-action@v1.2.1
-      with:
-        version: v1.30
-        args: --build-tags headless
+
+    - name: golangci-lint
+      uses: actions-contrib/golangci-lint@v1
