@@ -23,15 +23,16 @@ jobs:
 
     - name: Get dependencies
       run: |
-        apt-get install libgl1-mesa-dev
         go get -v -t -d ./...
 
     # - name: Build
     #   run: go build -v ./...
 
     - name: Test
-      run: go test -v ./...
+      run: go test -v -flags headless ./...
     
-    - name: golangci-lint
-      uses: actions-contrib/golangci-lint@v1
-
+    - name: Run golangci-lint
+      uses: golangci/golangci-lint-action@v1.2.1
+      with:
+        version: v1.30.0
+        args: --build-tags headless
