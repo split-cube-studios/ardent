@@ -7,12 +7,10 @@ on:
     branches: [ master ]
 
 jobs:
-
-  checkes:
+  checks:
     name: Checks
     runs-on: ubuntu-latest
     steps:
-
     - name: Set up Go 1.15
       uses: actions/setup-go@v2
       with:
@@ -22,12 +20,10 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Get dependencies
-      run: |
-        sudo apt-get install libgl1-mesa-dev
-        go get -v -t -d ./...
+      run: go get -tags headless -v -t -d ./...
 
-    # - name: Build
-    #   run: go build -v ./...
+    - name: Build
+      run: go build -v -tags headless ./...
 
     - name: Test
       run: go test -v -tags headless ./...
