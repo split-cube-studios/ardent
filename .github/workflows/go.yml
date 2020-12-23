@@ -35,5 +35,5 @@ jobs:
     - name: Run golangci-lint
       uses: golangci/golangci-lint-action@v1.2.1
       with:
-        version: v1.30.0
+        version: v1.30
         args: --build-tags headless
