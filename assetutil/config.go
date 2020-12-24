@@ -78,7 +78,7 @@ func (c config) toAsset() (*common.Asset, error) {
 	}
 	defer f.Close()
 
-	asset.Img, err = png.Decode(f)
+	asset.Img.Image, err = png.Decode(f)
 
 	return asset, err
 }

@@ -33,7 +33,7 @@ func (a *Asset) ToAnimation() engine.Animation {
 // UnmarshalBinary implements encoding.BinaryUnmarshaler.
 func (a *Asset) UnmarshalBinary(data []byte) error {
 	ca := common.NewAsset()
-	if err := ca.UnmarshalBinary(data); err != nil {
+	if err := ca.Unmarshal(data); err != nil {
 		return err
 	}
 

@@ -57,7 +57,7 @@ func CreateAssets(dir string) {
 			log.Fatal(err)
 		}
 
-		d, err := asset.MarshalBinary()
+		d, err := asset.Marshal()
 		if err != nil {
 			log.Fatal(err)
 		}
