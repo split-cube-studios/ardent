@@ -29,10 +29,12 @@ func main() {
 
 	// create new atlas from asset file
 	assetutil.CreateAssets("./examples/atlas")
+
 	atlas, err := game.NewAtlasFromAssetPath("./examples/atlas/atlas.asset")
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	// get atlas subimages
 	stripes := atlas.GetImage("stripes")
 	swirls := atlas.GetImage("swirls")
@@ -49,5 +51,9 @@ func main() {
 
 	// add renderer to game and start game
 	game.AddRenderer(renderer)
-	game.Run()
+
+	err = game.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
 }

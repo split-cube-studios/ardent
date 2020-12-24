@@ -2,7 +2,7 @@ package engine
 
 import "math"
 
-// Cardinal directions
+// Cardinal directions.
 const (
 	N = 1 << iota
 	E
@@ -34,7 +34,9 @@ var intervalToCardinal = [8]byte{
 	E, SE, S, SW, W, NW, N, NE,
 }
 
+// AngleToCardinal convert an angle to a cardinal direction.
 func AngleToCardinal(angle float64) byte {
 	interval := (int(math.Round(angle/(2*math.Pi/8))) + 8) % 8
+
 	return intervalToCardinal[interval]
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"image/color"
+	"log"
 
 	"github.com/split-cube-studios/ardent"
 	"github.com/split-cube-studios/ardent/engine"
@@ -40,5 +41,9 @@ func main() {
 
 	// add renderer to game and start game
 	game.AddRenderer(renderer)
-	game.Run()
+
+	err := game.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
 }

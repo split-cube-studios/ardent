@@ -1,3 +1,5 @@
+//+build !headless
+
 package ebiten
 
 import (
@@ -11,7 +13,6 @@ import (
 
 // Renderer is a simple ebiten renderer.
 type Renderer struct {
-	imgs   []engine.Image
 	camera engine.Camera
 
 	partitionMap *engine.PartitionMap
@@ -19,6 +20,7 @@ type Renderer struct {
 	w, h int
 }
 
+// NewRenderer creates an empty Renderer.
 func NewRenderer() *Renderer {
 	r := &Renderer{}
 	r.partitionMap = engine.NewPartitionMap(1000, 1000)
@@ -34,10 +36,12 @@ func (r *Renderer) AddImage(images ...engine.Image) {
 	}
 }
 
+// SetCamera implements engine.Renderer.
 func (r *Renderer) SetCamera(camera engine.Camera) {
 	r.camera = camera
 }
 
+// ScreenToWorld implements engine.Renderer.
 func (r *Renderer) ScreenToWorld(screen engine.Vec2) engine.Vec2 {
 	var cx, cy float64
 
@@ -55,9 +59,13 @@ func (r *Renderer) ScreenToWorld(screen engine.Vec2) engine.Vec2 {
 		float64(r.h),
 	)
 
-	return engine.Vec2{cx + sx, cy + sy}
+	return engine.Vec2{
+		X: cx + sx,
+		Y: cy + sy,
+	}
 }
 
+// Tick implements engine.Renderer.
 func (r *Renderer) Tick() {
 	/*
 		var i int
@@ -102,16 +110,15 @@ func (r *Renderer) draw(screen *ebiten.Image) {
 
 	vp := r.Viewport()
 	pos := engine.Vec2{
-		float64(vp.Min.X + (vp.Max.X-vp.Min.X)/2),
-		float64(vp.Min.Y + (vp.Max.Y-vp.Min.Y)/2),
+		X: float64(vp.Min.X + (vp.Max.X-vp.Min.X)/2),
+		Y: float64(vp.Min.Y + (vp.Max.Y-vp.Min.Y)/2),
 	}
 	r.partitionMap.Tick(
 		pos,
 		5,
 		func(entries []engine.PartitionEntry) {
 			sort.SliceStable(entries, func(i, j int) bool {
-				z1, z2 := entries[i].(*Image).z, entries[j].(*Image).z
-				return z1 < z2
+				return entries[i].(*Image).z < entries[j].(*Image).z
 			})
 
 			for _, entry := range entries {
@@ -121,19 +128,17 @@ func (r *Renderer) draw(screen *ebiten.Image) {
 					return
 				}
 
-				switch img.(type) {
+				switch a := img.(type) {
 				case *Image:
-					i := img.(*Image)
-					eimg = i.img
-					tx, ty = i.tx+i.ox, i.ty+i.oy
-					sx, sy = i.sx, i.sy
-					originX, originY = i.originX, i.originY
-					d = i.d
-					red, green, blue = i.r, i.g, i.b
-					alpha = i.alpha
+					eimg = a.img
+					tx, ty = a.tx+a.ox, a.ty+a.oy
+					sx, sy = a.sx, a.sy
+					originX, originY = a.originX, a.originY
+					d = a.d
+					red, green, blue = a.r, a.g, a.b
+					alpha = a.alpha
 
 				case *Animation:
-					a := img.(*Animation)
 					a.tick()
 					eimg = a.getFrame()
 					tx, ty = a.tx+a.ox, a.ty+a.oy
@@ -162,10 +167,12 @@ func (r *Renderer) draw(screen *ebiten.Image) {
 		})
 }
 
+// SetViewport implements engine.Renderer.
 func (r *Renderer) SetViewport(w, h int) {
 	r.w, r.h = w, h
 }
 
+// Viewport implements engine.Renderer.
 func (r *Renderer) Viewport() image.Rectangle {
 	var cx, cy float64
 	if r.camera != nil {
