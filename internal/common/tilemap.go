@@ -32,10 +32,9 @@ func (t *Tilemap) IndexToIso(i, j int) (float64, float64) {
 
 // GetTileValue returns the value associated with a tile.
 func (t *Tilemap) GetTileValue(x, y, z int) int {
-	if z < 0 || x < 0 || y < 0 ||
-		z >= len(t.Data) ||
-		x >= len(t.Data[z]) ||
-		y >= len(t.Data[z][y]) {
+	if z >= len(t.Data) || z < 0 ||
+		y >= len(t.Data[z]) || y < 0 ||
+		x >= len(t.Data[z][y]) || x < 0 {
 		return 0
 	}
 
