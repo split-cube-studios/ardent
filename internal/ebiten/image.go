@@ -49,7 +49,7 @@ func (i *Image) Rotate(d float64) {
 	i.d = d
 }
 
-// Origin sets the image origin by percent.
+// Origin sets the image origin by percent ranging from 0.0 to 1.0
 func (i *Image) Origin(x, y float64) {
 	i.originX, i.originY = x, y
 }

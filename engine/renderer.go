@@ -16,5 +16,6 @@ type Renderer interface {
 
 	Viewport() image.Rectangle
 
+	// Tick is called by the Game engine each tick. Tick should not be invoked manually
 	Tick()
 }

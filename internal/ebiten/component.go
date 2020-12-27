@@ -85,6 +85,9 @@ func (c *component) NewImageFromImage(img image.Image) engine.Image {
 		sx:                1,
 		sy:                1,
 		alpha:             1,
+		r:                 1,
+		g:                 1,
+		b:                 1,
 		renderable:        true,
 		roundTranslations: true,
 	}
