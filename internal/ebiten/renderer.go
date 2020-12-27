@@ -96,6 +96,7 @@ func (r *Renderer) draw(screen *ebiten.Image) {
 	var (
 		eimg             *ebiten.Image
 		tx, ty           float64
+		ox, oy           float64
 		originX, originY float64
 		sx, sy           float64
 		d                float64
@@ -133,6 +134,7 @@ func (r *Renderer) draw(screen *ebiten.Image) {
 				case *Image:
 					eimg = a.img
 					tx, ty = a.tx+a.ox, a.ty+a.oy
+					ox, oy = a.ox, a.oy
 					sx, sy = a.sx, a.sy
 					originX, originY = a.originX, a.originY
 					d = a.d
@@ -143,6 +145,7 @@ func (r *Renderer) draw(screen *ebiten.Image) {
 					a.tick()
 					eimg = a.getFrame()
 					tx, ty = a.tx+a.ox, a.ty+a.oy
+					ox, oy = a.ox, a.oy
 					sx, sy = a.sx, a.sy
 					originX, originY = a.originX, a.originY
 					d = a.d
@@ -158,8 +161,16 @@ func (r *Renderer) draw(screen *ebiten.Image) {
 				w, h := eimg.Size()
 
 				op.GeoM.Scale(sx, sy)
-				op.GeoM.Translate(tx-cx-originX*float64(w), ty-cy-originY*float64(h))
+				op.GeoM.Translate(
+					-originX*float64(w),
+					-originY*float64(h),
+				)
 				op.GeoM.Rotate(d)
+				x, y := tx+ox, ty+oy
+				op.GeoM.Translate(
+					x-cx,
+					y-cy,
+				)
 
 				op.ColorM.Scale(red, green, blue, alpha)
 

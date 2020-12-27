@@ -5,6 +5,7 @@ import (
 	"github.com/split-cube-studios/ardent/engine"
 	"image"
 	"image/color"
+	"math"
 )
 
 var (
@@ -12,7 +13,7 @@ var (
 )
 
 var (
-	game engine.Game
+	game   engine.Game
 	square engine.Image
 )
 
@@ -21,6 +22,7 @@ func main() {
 		w, h,
 		engine.FlagResizable,
 		func() {
+			square.Rotate(45.0 * 2 * math.Pi / 360)
 			square.Translate(float64(w)/2, float64(h)/2)
 		},
 		func(nw int, nh int) (int, int) {
@@ -42,6 +44,8 @@ func main() {
 
 	square = game.NewImageFromImage(i)
 	square.Origin(0.5, 0.5)
+	square.Rotate(45.0 * 2 * math.Pi / 360)
+	square.Translate(float64(w)/2, float64(h)/2)
 	renderer.AddImage(square)
 
 	err := game.Run()
