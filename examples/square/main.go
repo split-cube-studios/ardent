@@ -5,7 +5,6 @@ import (
 	"github.com/split-cube-studios/ardent/engine"
 	"image"
 	"image/color"
-	"log"
 )
 
 var (
@@ -25,7 +24,6 @@ func main() {
 			square.Translate(float64(w)/2, float64(h)/2)
 		},
 		func(nw int, nh int) (int, int) {
-			log.Printf("window resize: %d, %d", nw, nh)
 			w = nw
 			h = nh
 			return nw, nh
