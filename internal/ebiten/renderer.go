@@ -3,6 +3,7 @@
 package ebiten
 
 import (
+	"fmt"
 	"image"
 	"math"
 	"sort"
@@ -149,7 +150,7 @@ func (r *Renderer) draw(screen *ebiten.Image) {
 					alpha = a.alpha
 
 				default:
-					panic("Invalid image type")
+					panic(fmt.Sprintf("Invalid image type %T", img))
 				}
 
 				op := new(ebiten.DrawImageOptions)
