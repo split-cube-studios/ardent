@@ -5,27 +5,30 @@ import (
 	"github.com/split-cube-studios/ardent/engine"
 	"image"
 	"image/color"
+	"log"
 )
 
-const (
-	w, h  = 854, 480
-
+var (
+	w, h = 854, 480
 )
 
 var (
 	game engine.Game
-	img engine.Image
+	square engine.Image
 )
 
 func main() {
 	game = ardent.NewGame("Square",
 		w, h,
-		0,
+		engine.FlagResizable,
 		func() {
-			
+			square.Translate(float64(w)/2, float64(h)/2)
 		},
-		func(w int, h int) (int, int) {
-			return w, h
+		func(nw int, nh int) (int, int) {
+			log.Printf("window resize: %d, %d", nw, nh)
+			w = nw
+			h = nh
+			return nw, nh
 		},
 	)
 
@@ -39,10 +42,9 @@ func main() {
 		}
 	}
 
-	gameImage := game.NewImageFromImage(i)
-	gameImage.Translate(w/2, h/2)
-	gameImage.Origin(0.5, 0.5)
-	renderer.AddImage(gameImage)
+	square = game.NewImageFromImage(i)
+	square.Origin(0.5, 0.5)
+	renderer.AddImage(square)
 
 	err := game.Run()
 	if err != nil {
