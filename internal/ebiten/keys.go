@@ -1,7 +1,9 @@
+//+build !headless
+
 package ebiten
 
 import (
-	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/split-cube-studios/ardent/engine"
 )
 

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/split-cube-studios/ardent"
 	"github.com/split-cube-studios/ardent/assetutil"
 	"github.com/split-cube-studios/ardent/engine"
@@ -13,8 +15,6 @@ func main() {
 		854,
 		480,
 		engine.FlagResizable,
-		// use Ebiten backend
-		ardent.EBITEN,
 		// tick function
 		func() {},
 		// layout function
@@ -27,6 +27,7 @@ func main() {
 	renderer := game.NewRenderer()
 
 	assetutil.CreateAssets("./examples/image")
+
 	image, _ := game.NewImageFromAssetPath("./examples/image/scs.asset")
 
 	// add image to renderer
@@ -34,5 +35,9 @@ func main() {
 
 	// add renderer to game and start game
 	game.AddRenderer(renderer)
-	game.Run()
+
+	err := game.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
 }

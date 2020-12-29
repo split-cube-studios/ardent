@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/split-cube-studios/ardent"
 	"github.com/split-cube-studios/ardent/assetutil"
 	"github.com/split-cube-studios/ardent/engine"
@@ -24,8 +26,6 @@ func main() {
 		w,
 		h,
 		engine.FlagResizable,
-		// use Ebiten backend
-		ardent.EBITEN,
 		// tick function
 		func() {
 			if game.IsKeyPressed(engine.KeyW) {
@@ -49,6 +49,7 @@ func main() {
 	)
 
 	assetutil.CreateAssets("./examples/isometric")
+
 	atlas, _ := game.NewAtlasFromAssetPath("./examples/isometric/tiles.asset")
 
 	data := [2][][]int{
@@ -90,5 +91,8 @@ func main() {
 
 	game.AddRenderer(renderer)
 
-	game.Run()
+	err := game.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
 }

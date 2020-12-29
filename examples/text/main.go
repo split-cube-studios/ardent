@@ -2,6 +2,7 @@ package main
 
 import (
 	"image/color"
+	"log"
 
 	"github.com/split-cube-studios/ardent"
 	"github.com/split-cube-studios/ardent/engine"
@@ -15,8 +16,6 @@ func main() {
 		854,
 		480,
 		engine.FlagResizable,
-		// use Ebiten backend
-		ardent.EBITEN,
 		// tick function
 		func() {},
 		// layout function
@@ -42,5 +41,9 @@ func main() {
 
 	// add renderer to game and start game
 	game.AddRenderer(renderer)
-	game.Run()
+
+	err := game.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
 }

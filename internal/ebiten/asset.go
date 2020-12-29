@@ -1,40 +1,46 @@
+//+build !headless
+
 package ebiten
 
 import (
-	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/split-cube-studios/ardent/engine"
 	"github.com/split-cube-studios/ardent/internal/common"
 )
 
+// Asset is an engine.Asset.
 type Asset struct {
 	img       Image
 	atlas     Atlas
 	animation Animation
 }
 
+// ToImage implements engine.Asset.
 func (a *Asset) ToImage() engine.Image {
 	return &a.img
 }
 
+// ToAtlas implements engine.Asset.
 func (a *Asset) ToAtlas() engine.Atlas {
 	return &a.atlas
 }
 
+// ToAnimation implements engine.Asset.
 func (a *Asset) ToAnimation() engine.Animation {
 	return &a.animation
 }
 
+// UnmarshalBinary implements encoding.BinaryUnmarshaler.
 func (a *Asset) UnmarshalBinary(data []byte) error {
 	ca := common.NewAsset()
-	if err := ca.UnmarshalBinary(data); err != nil {
+	if err := ca.Unmarshal(data); err != nil {
 		return err
 	}
 
 	switch ca.Type {
 	case common.AssetTypeImage:
-		img, _ := ebiten.NewImageFromImage(ca.Img, ebiten.FilterDefault)
 		a.img = Image{
-			img:               img,
+			img:               ebiten.NewImageFromImage(ca.Img),
 			sx:                1,
 			sy:                1,
 			r:                 1,
@@ -45,17 +51,15 @@ func (a *Asset) UnmarshalBinary(data []byte) error {
 			roundTranslations: true,
 		}
 	case common.AssetTypeAtlas:
-		img, _ := ebiten.NewImageFromImage(ca.Img, ebiten.FilterDefault)
 		a.atlas = Atlas{
-			img:     img,
+			img:     ebiten.NewImageFromImage(ca.Img),
 			regions: ca.AtlasMap,
 			cache:   make(map[string]Image),
 		}
 	case common.AssetTypeAnimation:
-		img, _ := ebiten.NewImageFromImage(ca.Img, ebiten.FilterDefault)
 		a.animation = Animation{
 			Image: Image{
-				img:               img,
+				img:               ebiten.NewImageFromImage(ca.Img),
 				sx:                1,
 				sy:                1,
 				r:                 1,

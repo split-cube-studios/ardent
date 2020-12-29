@@ -1,19 +1,22 @@
+//+build !headless
+
 package ebiten
 
 import (
 	"fmt"
 	"image"
 	"image/color"
-	_ "image/jpeg"
-	_ "image/png"
+	_ "image/jpeg" // jpeg support
+	_ "image/png"  // png support
 	"io/ioutil"
 	"os"
 
-	"github.com/hajimehoshi/ebiten"
-	"github.com/hajimehoshi/ebiten/text"
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/text"
+	"golang.org/x/image/font"
+
 	"github.com/split-cube-studios/ardent/engine"
 	"github.com/split-cube-studios/ardent/internal/common"
-	"golang.org/x/image/font"
 )
 
 type component struct {
@@ -33,16 +36,16 @@ func (c *component) NewAssetFromPath(path string) (engine.Asset, error) {
 
 	f, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to open asset path: %w", err)
+		return nil, fmt.Errorf("failed to open asset path: %w", err)
 	}
 	defer f.Close()
 
-	a := new(Asset)
 	d, err := ioutil.ReadAll(f)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to decode asset: %w", err)
+		return nil, fmt.Errorf("failed to decode asset: %w", err)
 	}
 
+	a := new(Asset)
 	if err = a.UnmarshalBinary(d); err != nil {
 		return nil, err
 	}
@@ -55,13 +58,13 @@ func (c *component) NewAssetFromPath(path string) (engine.Asset, error) {
 func (c *component) NewImageFromPath(path string) (engine.Image, error) {
 	f, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to open image path: %w", err)
+		return nil, fmt.Errorf("failed to open image path: %w", err)
 	}
 	defer f.Close()
 
 	img, _, err := image.Decode(f)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to decode image: %w", err)
+		return nil, fmt.Errorf("failed to decode image: %w", err)
 	}
 
 	return c.NewImageFromImage(img), nil
@@ -77,20 +80,23 @@ func (c *component) NewImageFromAssetPath(path string) (engine.Image, error) {
 }
 
 func (c *component) NewImageFromImage(img image.Image) engine.Image {
-	eimg, _ := ebiten.NewImageFromImage(img, ebiten.FilterNearest)
 	return &Image{
-		img:               eimg,
+		img:               ebiten.NewImageFromImage(img),
 		sx:                1,
 		sy:                1,
 		alpha:             1,
+		r:                 1,
+		g:                 1,
+		b:                 1,
 		renderable:        true,
 		roundTranslations: true,
 	}
 }
 
 func (c *component) NewTextImage(txt string, w, h int, face font.Face, clr color.Color) engine.Image {
-	img, _ := ebiten.NewImage(w, h, ebiten.FilterNearest)
+	img := ebiten.NewImage(w, h)
 	text.Draw(img, txt, face, 0, face.Metrics().Height.Round(), clr)
+
 	return &Image{
 		img:               img,
 		sx:                1,
@@ -123,11 +129,11 @@ func (c *component) NewAnimationFromAssetPath(path string) (engine.Animation, er
 }
 
 func (c *component) NewRenderer() engine.Renderer {
-	return new(Renderer)
+	return NewRenderer()
 }
 
 func (c *component) NewIsoRenderer() engine.IsoRenderer {
-	return new(IsoRenderer)
+	return NewIsoRenderer()
 }
 
 func (c *component) NewTilemap(

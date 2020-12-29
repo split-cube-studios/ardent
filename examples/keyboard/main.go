@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/split-cube-studios/ardent"
 	"github.com/split-cube-studios/ardent/engine"
 )
@@ -11,7 +13,7 @@ var (
 	x         float64
 )
 
-// tick function
+// tick function.
 func tick() {
 	if game.IsKeyPressed(engine.KeyA) {
 		// walk left
@@ -33,8 +35,6 @@ func main() {
 		854,
 		480,
 		engine.FlagResizable,
-		// use Ebiten backend
-		ardent.EBITEN,
 		// tick function
 		tick,
 		// layout function
@@ -54,5 +54,9 @@ func main() {
 
 	// add renderer to game and start game
 	game.AddRenderer(renderer)
-	game.Run()
+
+	err := game.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
 }

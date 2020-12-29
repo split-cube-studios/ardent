@@ -1,8 +1,13 @@
+//+build !headless
+
 package ebiten
 
-import "github.com/hajimehoshi/ebiten"
+import (
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/split-cube-studios/ardent/engine"
+)
 
-// Image is an ebiten implementation of engine.Image
+// Image is an ebiten implementation of engine.Image.
 type Image struct {
 	img *ebiten.Image
 
@@ -29,7 +34,7 @@ func (i *Image) Translate(x, y float64) {
 	i.tx, i.ty = x, y
 }
 
-// Offset applies the translation offset
+// Offset applies the translation offset.
 func (i *Image) Offset(x, y float64) {
 	i.ox, i.oy = x, y
 }
@@ -44,7 +49,7 @@ func (i *Image) Rotate(d float64) {
 	i.d = d
 }
 
-// Origin sets the image origin by percent.
+// Origin sets the image origin by percent ranging from 0.0 to 1.0
 func (i *Image) Origin(x, y float64) {
 	i.originX, i.originY = x, y
 }
@@ -105,6 +110,19 @@ func (i *Image) Undispose() {
 // IsDisposed indicates if the image has been dispoed.
 func (i *Image) IsDisposed() bool {
 	return i.disposed
+}
+
+// Position implements engine.Image.
+func (i *Image) Position() engine.Vec2 {
+	return engine.Vec2{
+		X: i.tx,
+		Y: i.ty,
+	}
+}
+
+// Class implements engine.Image.
+func (i *Image) Class() string {
+	return "image"
 }
 
 // disposable describes behavior for disposable resources.

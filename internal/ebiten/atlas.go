@@ -1,19 +1,23 @@
+//+build !headless
+
 package ebiten
 
 import (
 	"image"
 
-	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/split-cube-studios/ardent/engine"
 	"github.com/split-cube-studios/ardent/internal/common"
 )
 
+// Atlas is an engine.Atlas.
 type Atlas struct {
 	img     *ebiten.Image
 	regions map[string]common.AtlasRegion
 	cache   map[string]Image
 }
 
+// GetImage implements engine.Atlas.
 func (a *Atlas) GetImage(k string) engine.Image {
 	region, ok := a.regions[k]
 	if !ok {

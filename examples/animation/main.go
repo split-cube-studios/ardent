@@ -1,11 +1,11 @@
 package main
 
 import (
+	"log"
+
 	"github.com/split-cube-studios/ardent"
 	"github.com/split-cube-studios/ardent/assetutil"
 	"github.com/split-cube-studios/ardent/engine"
-	"log"
-	"os"
 )
 
 var (
@@ -21,8 +21,6 @@ func main() {
 		854,
 		480,
 		engine.FlagResizable,
-		// use Ebiten backend
-		ardent.EBITEN,
 		// tick function
 		func() {
 			// change animation every 120 ticks
@@ -40,12 +38,14 @@ func main() {
 
 	// create new renderer and animation
 	renderer := game.NewRenderer()
+
 	assetutil.CreateAssets("./examples/animation")
+
 	animation, err := game.NewAnimationFromAssetPath("./examples/animation/animation.asset")
 	if err != nil {
 		log.Fatal(err)
-		os.Exit(1)
 	}
+
 	animation.SetState(animations[0])
 	animation.Scale(4, 4)
 
@@ -54,5 +54,9 @@ func main() {
 
 	// add renderer to game and start game
 	game.AddRenderer(renderer)
-	game.Run()
+
+	err = game.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
 }

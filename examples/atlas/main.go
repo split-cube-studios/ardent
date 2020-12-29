@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/split-cube-studios/ardent/assetutil"
 	"log"
 	"math"
 
 	"github.com/split-cube-studios/ardent"
+	"github.com/split-cube-studios/ardent/assetutil"
 	"github.com/split-cube-studios/ardent/engine"
 )
 
@@ -16,8 +16,6 @@ func main() {
 		854,
 		480,
 		engine.FlagResizable,
-		// use Ebiten backend
-		ardent.EBITEN,
 		// tick function
 		func() {},
 		// layout function
@@ -31,10 +29,12 @@ func main() {
 
 	// create new atlas from asset file
 	assetutil.CreateAssets("./examples/atlas")
+
 	atlas, err := game.NewAtlasFromAssetPath("./examples/atlas/atlas.asset")
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	// get atlas subimages
 	stripes := atlas.GetImage("stripes")
 	swirls := atlas.GetImage("swirls")
@@ -51,5 +51,9 @@ func main() {
 
 	// add renderer to game and start game
 	game.AddRenderer(renderer)
-	game.Run()
+
+	err = game.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
 }

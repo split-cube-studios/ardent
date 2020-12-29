@@ -1,5 +1,6 @@
 package engine
 
+// Animation is a series of frames that play in sequence.
 type Animation interface {
 	SetState(string)
 

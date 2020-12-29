@@ -8,6 +8,13 @@ import (
 	"github.com/split-cube-studios/ardent/internal/common"
 )
 
+// InvalidTypeError indicates an invalid type in a config.
+type InvalidTypeError string
+
+func (i InvalidTypeError) Error() string {
+	return fmt.Sprintf("invalid asset type: %s", string(i))
+}
+
 type config struct {
 	filepath string
 
@@ -62,8 +69,7 @@ func (c config) toAsset() (*common.Asset, error) {
 			}
 		}
 	default:
-		return nil, fmt.Errorf("Invalid asset type: %s", c.Type)
-
+		return nil, InvalidTypeError(c.Type)
 	}
 
 	f, err := os.Open(c.filepath)
@@ -72,7 +78,7 @@ func (c config) toAsset() (*common.Asset, error) {
 	}
 	defer f.Close()
 
-	asset.Img, err = png.Decode(f)
+	asset.Img.Image, err = png.Decode(f)
 
 	return asset, err
 }
