@@ -9,19 +9,6 @@ import (
 	"github.com/split-cube-studios/ardent/engine"
 )
 
-type sizer interface {
-	Size() (int, int)
-}
-
-type positioner interface {
-	Position() engine.Vec2
-}
-
-type sizerPositioner interface {
-	sizer
-	positioner
-}
-
 const (
 	paddleWidth, paddleHeight, paddleOffset, velocity = 10, 50, 10, 4.0
 )
