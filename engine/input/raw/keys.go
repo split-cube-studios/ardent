@@ -1,8 +1,19 @@
-package engine
+package raw
 
-// Keyboard keys.
+// A Key represents a specific key on a keyboard
+type Key int
+
+type KeyInput interface {
+	IsAnyKeyPressed() bool
+	IsAnyKeyJustPressed() bool
+	IsKeyPressed(Key) bool
+	IsKeyJustPressed(Key) bool
+	IsKeyJustReleased(Key) bool
+}
+
+// Keyboard Keys
 const (
-	Key0 = iota
+	Key0 Key = iota
 	Key1
 	Key2
 	Key3
@@ -102,11 +113,4 @@ const (
 	KeyAlt
 	KeyControl
 	KeyShift
-)
-
-// Mouse buttons.
-const (
-	MouseButtonLeft = iota
-	MouseButtonRight
-	MouseButtonMiddle
 )
