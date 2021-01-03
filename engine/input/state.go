@@ -10,7 +10,7 @@ const (
 
 type State struct {
 	Type  InputType
-	Input int
+	Input Input
 	Value float64
 	// TODO - how long has this state been held?
 }
