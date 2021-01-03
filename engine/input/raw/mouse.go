@@ -1,6 +1,6 @@
 package raw
 
-type MouseButton int
+type MouseButton = int
 
 const (
 	MouseButtonLeft MouseButton = iota
@@ -23,9 +23,12 @@ const (
 )
 
 type MouseButtonInput interface {
-	IsMouseButtonPressed(MouseButton) bool
-	IsMouseButtonJustPressed(MouseButton) bool
-	IsMouseButtonJustReleased(MouseButton) bool
+	IsAnyPressed() bool
+	IsAnyJustPressed() bool
+	IsPressed(MouseButton) bool
+	IsJustPressed(MouseButton) bool
+	IsJustReleased(MouseButton) bool
+
 	CursorPosition() (int, int)
 	SetCursorBounds(int, int, int, int)
 	SetCursorMode(CursorMode)
