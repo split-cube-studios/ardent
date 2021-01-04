@@ -212,8 +212,10 @@ func (s *Snake) Tick() {
 	food := s.game.food
 	if food.X == newX && food.Y == newY {
 		newHead := s.game.NewBodyPart(newX, newY)
-		s.Head = newHead
+		newHead.Next = oldHead
 		oldHead.Prev = newHead
+
+		s.Head = newHead
 
 		s.game.MoveFood()
 		return
