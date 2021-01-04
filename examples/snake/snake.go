@@ -20,14 +20,17 @@ var (
 func main() {
 	rand.Seed(time.Now().UnixNano())
 	snake := SnakeGame{}
-	game := ardent.NewGame("Snake", w, h, engine.FlagResizable, snake.Tick, func(_ int, _ int) (int, int) {
-		return w, h
-	})
+	game := ardent.NewGame(
+		"Snake",
+		w, h,
+		engine.FlagResizable,
+		snake.Tick, func(_ int, _ int) (int, int) {
+			return w, h
+		})
 
 	snake.setup(game)
 
-	err := game.Run()
-	if err != nil {
+	if err := game.Run(); err != nil {
 		panic(err)
 	}
 }
@@ -56,13 +59,12 @@ type SnakeGame struct {
 func (g *SnakeGame) Tick() {
 	g.checkInput()
 
-	now := time.Now()
 	if time.Since(g.lastMove) < g.timePerMove {
 		return
 	}
 
+	g.lastMove = time.Now()
 	g.snake.Tick()
-	g.lastMove = now
 }
 
 func (g *SnakeGame) checkInput() {
