@@ -115,26 +115,18 @@ func (g *SnakeGame) NewBodyPart(x, y int) *BodyPart {
 	return &b
 }
 
-// DrawBorder creates the game border using four individual images. This could be one image as well.
+// DrawBorder creates the game border. The border is always `blockSize` wide
 func (g *SnakeGame) DrawBorder() {
-	horizontal := image.NewNRGBA(image.Rect(0, 0, w, blockSize))
-	fillImage(horizontal, color.White)
-	vert := image.NewRGBA(image.Rect(0, 0, blockSize, h))
-	fillImage(vert, color.White)
+	border := image.NewNRGBA(image.Rect(0, 0, w, h))
+	for x := 0; x <= w; x++ {
+		for y := 0; y <= h; y++ {
+			if x < blockSize || x > w-blockSize || y < blockSize || y > h-blockSize {
+				border.Set(x, y, color.White)
+			}
+		}
+	}
 
-	top := g.game.NewImageFromImage(horizontal)
-	g.renderer.AddImage(top)
-
-	bottom := g.game.NewImageFromImage(horizontal)
-	bottom.Translate(0, float64(h)-float64(blockSize))
-	g.renderer.AddImage(bottom)
-
-	left := g.game.NewImageFromImage(vert)
-	g.renderer.AddImage(left)
-
-	right := g.game.NewImageFromImage(vert)
-	right.Translate(float64(w)-float64(blockSize), 0)
-	g.renderer.AddImage(right)
+	g.renderer.AddImage(g.game.NewImageFromImage(border))
 }
 
 func (g *SnakeGame) AddFood() {
