@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-var (
+const (
 	w = 500
 	h = 500
 
