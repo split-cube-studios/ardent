@@ -1,14 +1,12 @@
 package raw
 
+import "github.com/split-cube-studios/ardent/engine/input"
+
 // A Key represents a specific key on a keyboard
 type Key = int
 
 type KeyInput interface {
-	IsAnyPressed() bool
-	IsAnyJustPressed() bool
-	IsPressed(Key) bool
-	IsJustPressed(Key) bool
-	IsJustReleased(Key) bool
+	input.Source
 }
 
 // Keyboard Keys

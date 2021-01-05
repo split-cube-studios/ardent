@@ -13,7 +13,7 @@ func (c *Context) AddPerformer(a Action, p ActionPerformer) {
 	c.actions[a] = append(performers, p)
 }
 
-func (c *Context) RemovePerform(a Action, p ActionPerformer) {
+func (c *Context) RemovePerformer(a Action, p ActionPerformer) {
 	performers, ok := c.actions[a]
 	if !ok {
 		return

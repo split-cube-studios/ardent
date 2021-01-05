@@ -1,5 +1,7 @@
 package raw
 
+import "github.com/split-cube-studios/ardent/engine/input"
+
 type MouseButton = int
 
 const (
@@ -23,11 +25,7 @@ const (
 )
 
 type MouseButtonInput interface {
-	IsAnyPressed() bool
-	IsAnyJustPressed() bool
-	IsPressed(MouseButton) bool
-	IsJustPressed(MouseButton) bool
-	IsJustReleased(MouseButton) bool
+	input.Source
 
 	CursorPosition() (int, int)
 	SetCursorBounds(int, int, int, int)

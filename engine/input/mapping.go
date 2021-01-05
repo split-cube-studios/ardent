@@ -2,7 +2,7 @@ package input
 
 type Input = int
 
-type input interface {
+type Source interface {
 	IsAnyPressed() bool
 	IsAnyJustPressed() bool
 
@@ -18,17 +18,16 @@ type binding struct {
 	Action Action
 }
 
+// Mapping handles mapping of inputs (ie. KeyE) to actions (ie. Interact).
+// These actions are then mapped to performers scoped to a context.
 type Mapping struct {
-	input input
-
-	bindings []binding
-	contexts []Context
-
-	// Should the mapper perform actions for all current inputs or just the first input
+	input                  Source
+	bindings               []binding
+	contexts               []Context
 	allowSimultaneousInput bool
 }
 
-func NewMapping(input input, allowSimultaneousInput bool) Mapping {
+func NewMapping(input Source, allowSimultaneousInput bool) Mapping {
 	return Mapping{
 		input:                  input,
 		bindings:               make([]binding, 0),
@@ -56,6 +55,7 @@ func (m *Mapping) Poll() {
 	for _, b := range m.bindings {
 		if m.input.IsPressed(b.Input) {
 			state := m.input.StateOf(b.Input)
+			// TODO - could just get the state here and check the value != 0 probably
 
 			if !b.Action.CanPerform(state) {
 				return
@@ -87,7 +87,7 @@ func (m *Mapping) PushContext(ctx Context) {
 func (m *Mapping) PopContext() {
 	n := len(m.contexts) - 1
 	if n <= 0 {
-		return // TODO - Should we return err here? Probably not?
+		return
 	}
 
 	m.contexts = m.contexts[:n]
