@@ -4,6 +4,30 @@ type Context struct {
 	actions map[Action][]ActionPerformer
 }
 
+func (c *Context) AddPerformer(a Action, p ActionPerformer) {
+	performers, ok := c.actions[a]
+	if !ok {
+		performers = make([]ActionPerformer, 0)
+	}
+
+	c.actions[a] = append(performers, p)
+}
+
+func (c *Context) RemovePerform(a Action, p ActionPerformer) {
+	performers, ok := c.actions[a]
+	if !ok {
+		return
+	}
+
+	remaining := make([]ActionPerformer, 0)
+	for _, performer := range performers {
+		if performer != p {
+			remaining = append(remaining, performer)
+		}
+	}
+	c.actions[a] = performers
+}
+
 func (c *Context) perform(a Action, s State) bool {
 	performers, ok := c.actions[a]
 
