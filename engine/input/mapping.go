@@ -5,6 +5,9 @@ type Input = int
 type input interface {
 	IsAnyPressed() bool
 	IsAnyJustPressed() bool
+
+	StateOf(Input) State
+
 	IsPressed(Input) bool
 	IsJustPressed(Input) bool
 	IsJustReleased(Input) bool
@@ -16,7 +19,6 @@ type binding struct {
 }
 
 type Mapping struct {
-	Type  InputType
 	input input
 
 	bindings []binding
@@ -26,13 +28,13 @@ type Mapping struct {
 	allowSimultaneousInput bool
 }
 
-func NewMapping(Type InputType) Mapping {
-	m := Mapping{
-		Type: Type,
+func NewMapping(input input, allowSimultaneousInput bool) Mapping {
+	return Mapping{
+		input:                  input,
+		bindings:               make([]binding, 0),
+		contexts:               make([]Context, 0),
+		allowSimultaneousInput: allowSimultaneousInput,
 	}
-
-	// TODO - Switch on the inputtype and set the correct input
-	return m
 }
 
 // Bind adds a new binding to the mapper if it does not exist, otherwise updates the binding.
@@ -53,11 +55,12 @@ func (m *Mapping) Bind(a Action, input Input) {
 func (m *Mapping) Poll() {
 	for _, b := range m.bindings {
 		if m.input.IsPressed(b.Input) {
-			state := State{
-				Type:  m.Type,
-				Input: b.Input,
-				Value: 1.0,
+			state := m.input.StateOf(b.Input)
+
+			if !b.Action.CanPerform(state) {
+				return
 			}
+
 			m.perform(b.Action, state)
 
 			if !m.allowSimultaneousInput {
@@ -75,4 +78,17 @@ func (m *Mapping) perform(a Action, s State) {
 			return
 		}
 	}
+}
+
+func (m *Mapping) PushContext(ctx Context) {
+	m.contexts = append(m.contexts, ctx)
+}
+
+func (m *Mapping) PopContext() {
+	n := len(m.contexts) - 1
+	if n <= 0 {
+		return // TODO - Should we return err here? Probably not?
+	}
+
+	m.contexts = m.contexts[:n]
 }
