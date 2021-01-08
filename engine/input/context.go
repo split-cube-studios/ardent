@@ -1,9 +1,11 @@
 package input
 
+// Context is a scoped map of Actions to Action Performers.
 type Context struct {
 	actions map[Action][]ActionPerformer
 }
 
+// Adds a performer to be called when the action is performed.
 func (c *Context) AddPerformer(a Action, p ActionPerformer) {
 	performers, ok := c.actions[a]
 	if !ok {
@@ -13,6 +15,7 @@ func (c *Context) AddPerformer(a Action, p ActionPerformer) {
 	c.actions[a] = append(performers, p)
 }
 
+// Removes a performer from the action's performers
 func (c *Context) RemovePerformer(a Action, p ActionPerformer) {
 	performers, ok := c.actions[a]
 	if !ok {

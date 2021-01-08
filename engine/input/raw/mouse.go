@@ -24,7 +24,8 @@ const (
 	CursorModeCaptured
 )
 
-type MouseButtonInput interface {
+// MouseSource is an input source for mice.
+type MouseSource interface {
 	input.Source
 
 	CursorPosition() (int, int)

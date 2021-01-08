@@ -31,5 +31,4 @@ type Game interface {
 	IsFocused() bool
 
 	Component
-	Input
 }

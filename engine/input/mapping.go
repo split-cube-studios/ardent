@@ -1,16 +1,22 @@
 package input
 
+// Input is an alias for all types of input
 type Input = int
 
-type Source interface {
-	IsAnyPressed() bool
-	IsAnyJustPressed() bool
+// Mapping handles mapping of inputs (ie. KeyE) to actions (ie. Interact).
+// These actions are then mapped to performers scoped to a context.
+type Mapping struct {
+	// The input source to read from
+	input Source
 
-	StateOf(Input) State
+	// The bindings that are available for this mapping
+	bindings []binding
 
-	IsPressed(Input) bool
-	IsJustPressed(Input) bool
-	IsJustReleased(Input) bool
+	// The context stack for this mapping
+	contexts []Context
+
+	// Should the mapping read multiple different inputs at once or just the first one found
+	allowSimultaneousInput bool
 }
 
 type binding struct {
@@ -18,15 +24,7 @@ type binding struct {
 	Action Action
 }
 
-// Mapping handles mapping of inputs (ie. KeyE) to actions (ie. Interact).
-// These actions are then mapped to performers scoped to a context.
-type Mapping struct {
-	input                  Source
-	bindings               []binding
-	contexts               []Context
-	allowSimultaneousInput bool
-}
-
+// Create a new mapping using the input source.
 func NewMapping(input Source, allowSimultaneousInput bool) Mapping {
 	return Mapping{
 		input:                  input,
@@ -51,6 +49,8 @@ func (m *Mapping) Bind(a Action, input Input) {
 	})
 }
 
+// Poll the current input state to see if any bound inputs are active.
+// If a bound input is active and the bound action can be performed then the action is performed.
 func (m *Mapping) Poll() {
 	for _, b := range m.bindings {
 		if m.input.IsPressed(b.Input) {
@@ -80,10 +80,13 @@ func (m *Mapping) perform(a Action, s State) {
 	}
 }
 
+// Push a context to the top of the stack.
 func (m *Mapping) PushContext(ctx Context) {
 	m.contexts = append(m.contexts, ctx)
 }
 
+// Pop the top context off the stack.
+// Does nothing if the stack is empty.
 func (m *Mapping) PopContext() {
 	n := len(m.contexts) - 1
 	if n <= 0 {
