@@ -1,17 +1,8 @@
 package raw
 
-import "github.com/split-cube-studios/ardent/engine/input"
-
-// A Key represents a specific key on a keyboard
-type Key = int
-
-type KeyInput interface {
-	input.Source
-}
-
 // Keyboard Keys
 const (
-	Key0 Key = iota
+	Key0 int = iota
 	Key1
 	Key2
 	Key3

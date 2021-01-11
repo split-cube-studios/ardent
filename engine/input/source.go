@@ -1,11 +1,11 @@
 package input
 
-import "time"
+import "github.com/split-cube-studios/ardent/engine/input/raw"
 
-type InputType int
+type Type int
 
 const (
-	Keyboard InputType = iota
+	Keyboard Type = iota
 	MouseButton
 	Gamepad
 )
@@ -22,10 +22,24 @@ type Source interface {
 	IsJustReleased(Input) bool
 }
 
+// KeySource is an input source for keyboards.
+type KeySource interface {
+	Source
+}
+
+// MouseSource is an input source for mice.
+type MouseSource interface {
+	Source
+
+	CursorPosition() (int, int)
+	SetCursorBounds(int, int, int, int)
+	SetCursorMode(raw.CursorMode)
+}
+
 // State is the current input state of a binding
 type State struct {
 	// The input source type that this state came from.
-	Type InputType
+	Type Type
 
 	// The raw input that was read.
 	Input Input
@@ -35,6 +49,6 @@ type State struct {
 	// Range inputs (i.e. Gamepad sticks) will be a normalized value in the range.
 	Value float64
 
-	// The amount of time this state has been active.
-	Time time.Duration
+	// This key was pressed this frame
+	JustPressed bool
 }

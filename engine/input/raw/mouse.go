@@ -1,11 +1,7 @@
 package raw
 
-import "github.com/split-cube-studios/ardent/engine/input"
-
-type MouseButton = int
-
 const (
-	MouseButtonLeft MouseButton = iota
+	MouseButtonLeft int = iota
 	MouseButtonRight
 	MouseButtonMiddle
 )
@@ -23,12 +19,3 @@ const (
 	// CursorModeCaptured indicates a hidden cursor that may not escape the window.
 	CursorModeCaptured
 )
-
-// MouseSource is an input source for mice.
-type MouseSource interface {
-	input.Source
-
-	CursorPosition() (int, int)
-	SetCursorBounds(int, int, int, int)
-	SetCursorMode(CursorMode)
-}
