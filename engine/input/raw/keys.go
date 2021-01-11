@@ -1,8 +1,8 @@
-package engine
+package raw
 
-// Keyboard keys.
+// Keyboard Keys
 const (
-	Key0 = iota
+	Key0 int = iota
 	Key1
 	Key2
 	Key3
@@ -102,11 +102,4 @@ const (
 	KeyAlt
 	KeyControl
 	KeyShift
-)
-
-// Mouse buttons.
-const (
-	MouseButtonLeft = iota
-	MouseButtonRight
-	MouseButtonMiddle
 )

@@ -5,16 +5,18 @@ import (
 
 	"github.com/split-cube-studios/ardent"
 	"github.com/split-cube-studios/ardent/engine"
+	"github.com/split-cube-studios/ardent/engine/input"
 )
 
 var (
 	game    engine.Game
 	stripes engine.Image
+	mouse   input.MouseSource
 )
 
 // tick function.
 func tick() {
-	cx, cy := game.CursorPosition()
+	cx, cy := mouse.CursorPosition()
 	w, h := stripes.Size()
 	stripes.Translate(float64(cx-w/2), float64(cy-h/2))
 }
@@ -38,7 +40,11 @@ func main() {
 	renderer := game.NewRenderer()
 
 	// create new atlas from asset file
-	atlas, _ := game.NewAtlasFromAssetPath("./examples/atlas/atlas.asset")
+	atlas, err := game.NewAtlasFromAssetPath("./examples/atlas/atlas.asset")
+
+	if err != nil {
+		panic(err)
+	}
 
 	// get atlas subimage
 	stripes = atlas.GetImage("stripes")
@@ -48,8 +54,9 @@ func main() {
 
 	// add renderer to game and start game
 	game.AddRenderer(renderer)
+	mouse = game.NewMouseSource()
 
-	err := game.Run()
+	err = game.Run()
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -1,6 +1,10 @@
 // Package engine contains generic implementations of game logic and asset management.
 package engine
 
+import (
+	"github.com/split-cube-studios/ardent/engine/input"
+)
+
 const (
 	// FlagResizable indicates that the viewport may be resized.
 	FlagResizable = 1 << iota
@@ -30,6 +34,9 @@ type Game interface {
 	// IsFocused returns the focused state of the game.
 	IsFocused() bool
 
+	// TODO - Should this be its own interface?
+	NewKeySource() input.KeySource
+	NewMouseSource() input.MouseSource
+
 	Component
-	Input
 }

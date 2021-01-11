@@ -6,6 +6,8 @@ import (
 	"github.com/split-cube-studios/ardent"
 	"github.com/split-cube-studios/ardent/assetutil"
 	"github.com/split-cube-studios/ardent/engine"
+	"github.com/split-cube-studios/ardent/engine/input"
+	"github.com/split-cube-studios/ardent/engine/input/raw"
 )
 
 const (
@@ -16,6 +18,7 @@ const (
 var (
 	game      engine.Game
 	animation engine.Animation
+	keyboard  input.KeySource
 	x, y      float64
 )
 
@@ -28,15 +31,15 @@ func main() {
 		engine.FlagResizable,
 		// tick function
 		func() {
-			if game.IsKeyPressed(engine.KeyW) {
+			if keyboard.IsPressed(raw.KeyW) {
 				y -= speed
-			} else if game.IsKeyPressed(engine.KeyS) {
+			} else if keyboard.IsPressed(raw.KeyS) {
 				y += speed
 			}
 
-			if game.IsKeyPressed(engine.KeyA) {
+			if keyboard.IsPressed(raw.KeyA) {
 				x -= speed
-			} else if game.IsKeyPressed(engine.KeyD) {
+			} else if keyboard.IsPressed(raw.KeyD) {
 				x += speed
 			}
 
@@ -90,6 +93,7 @@ func main() {
 	renderer.AddImage(animation)
 
 	game.AddRenderer(renderer)
+	keyboard = game.NewKeySource()
 
 	err := game.Run()
 	if err != nil {
