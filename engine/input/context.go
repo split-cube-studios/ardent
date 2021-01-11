@@ -28,7 +28,7 @@ func (c *Context) RemovePerformer(a Action, p ActionPerformer) {
 			remaining = append(remaining, performer)
 		}
 	}
-	c.actions[a] = performers
+	c.actions[a] = remaining
 }
 
 func (c *Context) perform(a Action, s State) bool {
