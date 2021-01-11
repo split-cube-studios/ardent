@@ -3,7 +3,6 @@
 package headless
 
 import (
-	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/split-cube-studios/ardent/engine/input"
 	"github.com/split-cube-studios/ardent/engine/input/raw"
 )
@@ -31,7 +30,7 @@ func (s *KeySource) StateOf(in input.Input) input.State {
 }
 
 func (s *KeySource) IsPressed(in input.Input) bool {
-	return ebiten.IsKeyPressed(toEbitenKey[in])
+	return false
 }
 
 func (s *KeySource) IsJustPressed(in input.Input) bool {
