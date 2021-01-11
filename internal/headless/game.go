@@ -2,12 +2,14 @@
 
 package headless
 
-import "github.com/split-cube-studios/ardent/engine"
+import (
+	"github.com/split-cube-studios/ardent/engine"
+	"github.com/split-cube-studios/ardent/engine/input"
+)
 
 // Game is a headless implementation of engine.Game.
 type Game struct {
 	component
-	Input
 
 	tickFunc func()
 }
@@ -58,4 +60,12 @@ func (g Game) SetVsync(v bool) {
 // IsFocused returns the focused state of the game.
 func (g Game) IsFocused() bool {
 	return false
+}
+
+func (g Game) NewKeySource() input.KeySource {
+	return &KeySource{}
+}
+
+func (g Game) NewMouseSource() input.MouseSource {
+	return &MouseSource{}
 }
