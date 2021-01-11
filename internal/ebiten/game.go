@@ -5,6 +5,7 @@ package ebiten
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/split-cube-studios/ardent/engine"
+	"github.com/split-cube-studios/ardent/engine/input"
 )
 
 // Game is an ebiten implementation
@@ -20,7 +21,6 @@ type Game struct {
 	renderers []engine.Renderer
 
 	*component
-	Input
 }
 
 // NewGame returns an instantiated game.
@@ -113,4 +113,12 @@ func (g Game) SetVsync(v bool) {
 // IsFocused returns the focused state of the game.
 func (g Game) IsFocused() bool {
 	return ebiten.IsFocused()
+}
+
+func (g Game) NewKeySource() input.KeySource {
+	return &KeySource{}
+}
+
+func (g Game) NewMouseSource() input.MouseSource {
+	return &MouseSource{}
 }
