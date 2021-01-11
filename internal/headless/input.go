@@ -42,11 +42,7 @@ func (s *KeySource) IsJustReleased(in input.Input) bool {
 }
 
 // Input is an engine.Input.
-type MouseSource struct {
-	minX, minY, maxX, maxY int
-	lcx, lcy               int
-	vcx, vcy               int
-}
+type MouseSource struct{}
 
 func (s *MouseSource) IsAnyPressed() bool {
 	return false
