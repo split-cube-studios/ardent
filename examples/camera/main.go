@@ -6,12 +6,15 @@ import (
 	"github.com/split-cube-studios/ardent"
 	"github.com/split-cube-studios/ardent/assetutil"
 	"github.com/split-cube-studios/ardent/engine"
+	"github.com/split-cube-studios/ardent/engine/input"
+	"github.com/split-cube-studios/ardent/engine/input/raw"
 )
 
 var (
 	game                      engine.Game
 	camera                    engine.Camera
 	stripes                   engine.Image
+	keyboard                  input.KeySource
 	x, y                      float64
 	stripeWidth, stripeHeight int
 )
@@ -22,15 +25,15 @@ const (
 
 // tick function.
 func tick() {
-	if game.IsKeyPressed(engine.KeyW) {
+	if keyboard.IsPressed(raw.KeyW) {
 		y -= 2
-	} else if game.IsKeyPressed(engine.KeyS) {
+	} else if keyboard.IsPressed(raw.KeyS) {
 		y += 2
 	}
 
-	if game.IsKeyPressed(engine.KeyA) {
+	if keyboard.IsPressed(raw.KeyA) {
 		x -= 2
-	} else if game.IsKeyPressed(engine.KeyD) {
+	} else if keyboard.IsPressed(raw.KeyD) {
 		x += 2
 	}
 
@@ -86,7 +89,7 @@ func main() {
 
 	// add renderer to game and start game
 	game.AddRenderer(renderer)
-
+	keyboard = game.NewKeySource()
 	err := game.Run()
 	if err != nil {
 		log.Fatal(err)

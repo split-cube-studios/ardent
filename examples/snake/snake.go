@@ -1,13 +1,16 @@
 package main
 
 import (
-	"github.com/split-cube-studios/ardent"
-	"github.com/split-cube-studios/ardent/engine"
-	"golang.org/x/image/draw"
 	"image"
 	"image/color"
 	"math/rand"
 	"time"
+
+	"github.com/split-cube-studios/ardent"
+	"github.com/split-cube-studios/ardent/engine"
+	"github.com/split-cube-studios/ardent/engine/input"
+	"github.com/split-cube-studios/ardent/engine/input/raw"
+	"golang.org/x/image/draw"
 )
 
 const (
@@ -45,6 +48,7 @@ func createTile() image.Image {
 type SnakeGame struct {
 	game     engine.Game
 	renderer engine.Renderer
+	keyboard input.KeySource
 
 	snake    *Snake
 	food     *Food
@@ -68,16 +72,16 @@ func (g *SnakeGame) Tick() {
 }
 
 func (g *SnakeGame) checkInput() {
-	if g.game.IsKeyJustPressed(engine.KeyW) {
+	if g.keyboard.IsJustPressed(raw.KeyW) {
 		g.snake.Direction = engine.N
 	}
-	if g.game.IsKeyJustPressed(engine.KeyA) {
+	if g.keyboard.IsJustPressed(raw.KeyA) {
 		g.snake.Direction = engine.W
 	}
-	if g.game.IsKeyJustPressed(engine.KeyS) {
+	if g.keyboard.IsJustPressed(raw.KeyS) {
 		g.snake.Direction = engine.S
 	}
-	if g.game.IsKeyJustPressed(engine.KeyD) {
+	if g.keyboard.IsJustPressed(raw.KeyD) {
 		g.snake.Direction = engine.E
 	}
 }
@@ -90,6 +94,7 @@ func (g *SnakeGame) setup(game engine.Game) {
 
 	g.renderer = game.NewRenderer()
 	game.AddRenderer(g.renderer)
+	g.keyboard = game.NewKeySource()
 
 	g.DrawBorder()
 

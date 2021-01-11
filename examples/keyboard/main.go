@@ -5,21 +5,24 @@ import (
 
 	"github.com/split-cube-studios/ardent"
 	"github.com/split-cube-studios/ardent/engine"
+	"github.com/split-cube-studios/ardent/engine/input"
+	"github.com/split-cube-studios/ardent/engine/input/raw"
 )
 
 var (
 	game      engine.Game
 	animation engine.Animation
+	keyboard  input.KeySource
 	x         float64
 )
 
 // tick function.
 func tick() {
-	if game.IsKeyPressed(engine.KeyA) {
+	if keyboard.IsPressed(raw.KeyA) {
 		// walk left
 		animation.SetState("sw")
 		x--
-	} else if game.IsKeyPressed(engine.KeyD) {
+	} else if keyboard.IsPressed(raw.KeyD) {
 		// walk right
 		animation.SetState("se")
 		x++
@@ -54,6 +57,7 @@ func main() {
 
 	// add renderer to game and start game
 	game.AddRenderer(renderer)
+	keyboard = game.NewKeySource()
 
 	err := game.Run()
 	if err != nil {
