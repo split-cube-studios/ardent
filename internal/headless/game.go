@@ -10,7 +10,6 @@ import (
 // Game is a headless implementation of engine.Game.
 type Game struct {
 	component
-	Input
 
 	tickFunc func()
 }
