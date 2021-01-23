@@ -8,6 +8,7 @@ import "github.com/split-cube-studios/ardent/engine"
 type Game struct {
 	component
 	Input
+	SoundControl
 
 	tickFunc func()
 }

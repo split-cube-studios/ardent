@@ -21,6 +21,7 @@ type Game struct {
 
 	*component
 	Input
+	SoundControl
 }
 
 // NewGame returns an instantiated game.

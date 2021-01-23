@@ -21,6 +21,8 @@ type Component interface {
 
 	NewAnimationFromAssetPath(string) (Animation, error)
 
+	NewSoundFromAssetPath(string) (Sound, error)
+
 	NewRenderer() Renderer
 	NewIsoRenderer() IsoRenderer
 

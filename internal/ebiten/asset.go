@@ -4,6 +4,7 @@ package ebiten
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/split-cube-studios/ardent/engine"
 	"github.com/split-cube-studios/ardent/internal/common"
 )
@@ -13,21 +14,27 @@ type Asset struct {
 	img       Image
 	atlas     Atlas
 	animation Animation
+	sound     Sound
 }
 
-// ToImage implements engine.Asset.
+// ToImage implements the ToImage method of engine.Asset.
 func (a *Asset) ToImage() engine.Image {
 	return &a.img
 }
 
-// ToAtlas implements engine.Asset.
+// ToAtlas implements the ToAtlas method of engine.Asset.
 func (a *Asset) ToAtlas() engine.Atlas {
 	return &a.atlas
 }
 
-// ToAnimation implements engine.Asset.
+// ToAnimation implements the ToAnimation method of engine.Asset.
 func (a *Asset) ToAnimation() engine.Animation {
 	return &a.animation
+}
+
+// ToSound implements the ToSound method of engine.Asset.
+func (a *Asset) ToSound() engine.Sound {
+	return &a.sound
 }
 
 // UnmarshalBinary implements encoding.BinaryUnmarshaler.
@@ -50,12 +57,14 @@ func (a *Asset) UnmarshalBinary(data []byte) error {
 			renderable:        true,
 			roundTranslations: true,
 		}
+
 	case common.AssetTypeAtlas:
 		a.atlas = Atlas{
 			img:     ebiten.NewImageFromImage(ca.Img),
 			regions: ca.AtlasMap,
 			cache:   make(map[string]Image),
 		}
+
 	case common.AssetTypeAnimation:
 		a.animation = Animation{
 			Image: Image{
@@ -74,7 +83,14 @@ func (a *Asset) UnmarshalBinary(data []byte) error {
 			anims: ca.AnimationMap,
 			cache: make(map[uint16]*ebiten.Image),
 		}
+
 	case common.AssetTypeSound:
+		a.sound = Sound{
+			group:   ca.Snd.Group,
+			options: ca.Snd.Options,
+			context: audio.NewContext(44100),
+		}
+
 	default:
 		panic("Invalid asset type")
 	}

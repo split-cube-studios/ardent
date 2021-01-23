@@ -41,6 +41,10 @@ func (c component) NewAnimationFromAssetPath(path string) (engine.Animation, err
 	return new(Animation), nil
 }
 
+func (c component) NewSoundFromAssetPath(path string) (engine.Sound, error) {
+	return new(Sound), nil
+}
+
 func (c component) NewRenderer() engine.Renderer {
 	return new(Renderer)
 }
