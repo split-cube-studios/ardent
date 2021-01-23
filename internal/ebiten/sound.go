@@ -25,6 +25,7 @@ func (s *Sound) Play() {
 		s.player.Close()
 	}
 
+	// NOTE we may want to cache the players
 	s.player = audio.NewPlayerFromBytes(
 		s.context,
 		s.options[rand.Intn(len(s.options))],

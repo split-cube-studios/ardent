@@ -46,6 +46,8 @@ type config struct {
 func (c config) toAsset() (*common.Asset, error) {
 	asset := common.NewAsset()
 
+	var err error
+
 	switch c.Type {
 	case "image":
 		asset.Type = common.AssetTypeImage
