@@ -15,8 +15,19 @@ var (
 
 func tick() {
 
-	if game.IsKeyJustPressed(engine.KeySpace) {
+	switch {
+	case game.IsKeyJustPressed(engine.KeySpace):
 		sound.Play()
+
+	case game.IsKeyJustPressed(engine.KeyL):
+		sound.Loop()
+
+	case game.IsKeyJustPressed(engine.KeyP):
+		sound.Pause()
+
+	case game.IsKeyJustPressed(engine.KeyR):
+		sound.Reset()
+
 	}
 }
 
