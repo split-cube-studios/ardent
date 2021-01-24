@@ -1,9 +1,11 @@
 package ebiten
 
 import (
+	"bytes"
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2/audio"
+	"github.com/hajimehoshi/ebiten/v2/audio/vorbis"
 )
 
 // Sound is an ebiten implementation of engine.Sound.
@@ -25,17 +27,42 @@ func (s *Sound) Play() {
 		s.player.Close()
 	}
 
+	option := s.options[rand.Intn(len(s.options))]
+	sound, _ := vorbis.Decode(s.context, bytes.NewReader(option))
+
 	// NOTE we may want to cache the players
-	s.player = audio.NewPlayerFromBytes(
+	s.player, _ = audio.NewPlayer(
 		s.context,
-		s.options[rand.Intn(len(s.options))],
+		sound,
 	)
 
 	s.player.Play()
 }
 
 // Loop implements the Loop method of engine.Sound.
-func (s *Sound) Loop() {}
+func (s *Sound) Loop() {
+
+	if len(s.options) == 0 {
+		return
+	}
+
+	if s.player != nil {
+		s.player.Close()
+	}
+
+	option := s.options[rand.Intn(len(s.options))]
+	sound, _ := vorbis.Decode(s.context, bytes.NewReader(option))
+
+	loop := audio.NewInfiniteLoop(
+		sound,
+		sound.Length(),
+	)
+
+	// shouldn't return an error
+	s.player, _ = audio.NewPlayer(s.context, loop)
+
+	s.player.Play()
+}
 
 // Pause implements the Pause method of engine.Sound.
 func (s *Sound) Pause() {
