@@ -43,6 +43,8 @@ func (s *Sound) Pause() {
 	if s.player == nil {
 		return
 	}
+
+	s.player.Pause()
 }
 
 // Reset implements the Reset method of engine.Sound.
