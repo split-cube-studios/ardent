@@ -2,4 +2,4 @@ version: 1.0
 type: sound
 sounds:
   sfx:
-    - 'hit.ogg'
+    - 'sample.ogg'

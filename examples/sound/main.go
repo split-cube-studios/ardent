@@ -1,11 +1,13 @@
 package main
 
 import (
+	"image/color"
 	"log"
 
 	"github.com/split-cube-studios/ardent"
 	"github.com/split-cube-studios/ardent/assetutil"
 	"github.com/split-cube-studios/ardent/engine"
+	"golang.org/x/image/font/basicfont"
 )
 
 var (
@@ -42,13 +44,26 @@ func main() {
 		tick,
 		// layout function
 		func(ow, oh int) (int, int) {
-			return ow, oh
+			return ow / 5, oh / 5
 		},
 	)
 
 	assetutil.CreateAssets("./")
 
-	sound, _ = game.NewSoundFromAssetPath("hit.asset")
+	sound, _ = game.NewSoundFromAssetPath("sample.asset")
+
+	image := game.NewTextImage(
+		"Space: Play\nL: Loop\nP: Pause\nR: Reset",
+		250,
+		250,
+		basicfont.Face7x13,
+		color.White,
+	)
+
+	renderer := game.NewRenderer()
+	renderer.AddImage(image)
+
+	game.AddRenderer(renderer)
 
 	if err := game.Run(); err != nil {
 		log.Fatal(err)
