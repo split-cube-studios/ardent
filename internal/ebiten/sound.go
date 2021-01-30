@@ -140,7 +140,7 @@ func (sc *SoundControl) SetVolume(group string, v float64) {
 
 	sc.volumes[group] = v
 
-	for sound, _ := range sc.groups[group] {
+	for sound := range sc.groups[group] {
 		sound.setVolume(v)
 	}
 }
