@@ -40,7 +40,7 @@ type config struct {
 		End   int  `yml:"end"`
 	} `yml:"animations,omitempty"`
 
-	Sounds map[string][]string `yml:"sounds,omitempty`
+	Sounds map[string][]string `yml:"sounds,omitempty"`
 }
 
 func (c config) toAsset() (*common.Asset, error) {
