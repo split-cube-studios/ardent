@@ -156,6 +156,7 @@ func (sc *SoundControl) Volume(group string) (v float64) {
 	return
 }
 
+// nolint:unused
 func (sc *SoundControl) addSound(s *Sound) {
 
 	group := sc.groups[s.group]
