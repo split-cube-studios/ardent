@@ -88,7 +88,7 @@ func (s *Sound) Reset() {
 	}
 
 	// should not produce error
-	_ := s.player.Rewind()
+	_ = s.player.Rewind()
 }
 
 // Close implements the Close method of engine.Sound.
