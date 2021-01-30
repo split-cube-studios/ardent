@@ -2,6 +2,7 @@ package ebiten
 
 import (
 	"bytes"
+	"math"
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2/audio"
@@ -14,6 +15,9 @@ type Sound struct {
 	options [][]byte
 	context *audio.Context
 	player  *audio.Player
+
+	sc     *SoundControl
+	volume float64
 }
 
 // Play implements the Play method of engine.Sound.
@@ -36,6 +40,7 @@ func (s *Sound) Play() {
 		sound,
 	)
 
+	s.player.SetVolume(s.volume)
 	s.player.Play()
 }
 
@@ -61,6 +66,7 @@ func (s *Sound) Loop() {
 	// shouldn't return an error
 	s.player, _ = audio.NewPlayer(s.context, loop)
 
+	s.player.SetVolume(s.volume)
 	s.player.Play()
 }
 
@@ -84,13 +90,84 @@ func (s *Sound) Reset() {
 	s.player.Rewind()
 }
 
+// Close implements the Close method of engine.Sound.
+func (s *Sound) Close() {
+
+	if s.player == nil {
+		return
+	}
+
+	s.player.Close()
+
+	if s.sc != nil {
+		s.sc.removeSound(s)
+	}
+}
+
+func (s *Sound) setVolume(v float64) {
+
+	s.volume = v
+
+	if s.player == nil {
+		return
+	}
+
+	s.player.SetVolume(v)
+}
+
 // SoundControl is an ebiten implementation of engine.SoundControl.
-type SoundControl struct{}
+type SoundControl struct {
+	groups  map[string]map[*Sound]struct{}
+	volumes map[string]float64
+}
+
+// NewSoundControl returns an instantiated *SoundControl.
+func NewSoundControl() *SoundControl {
+	return &SoundControl{
+		groups:  make(map[string]map[*Sound]struct{}),
+		volumes: make(map[string]float64),
+	}
+}
 
 // SetVolume implements the SetVolume method of engine.SoundControl.
-func (sc *SoundControl) SetVolume(group string, v float64) {}
+func (sc *SoundControl) SetVolume(group string, v float64) {
+
+	v = math.Max(
+		0,
+		math.Min(1.0, v),
+	)
+
+	sc.volumes[group] = v
+
+	for sound, _ := range sc.groups[group] {
+		sound.setVolume(v)
+	}
+}
 
 // Volume implements the Volume method of engine.SoundControl.
-func (sc *SoundControl) Volume(group string) float64 {
-	return 1.0
+func (sc *SoundControl) Volume(group string) (v float64) {
+
+	var ok bool
+	if v, ok = sc.volumes[group]; !ok {
+		v = 1.0
+	}
+
+	return
+}
+
+func (sc *SoundControl) addSound(s *Sound) {
+
+	group := sc.groups[s.group]
+	if group == nil {
+		group = make(map[*Sound]struct{})
+		sc.groups[s.group] = group
+	}
+
+	group[s] = struct{}{}
+}
+
+func (sc *SoundControl) removeSound(s *Sound) {
+	if group, ok := sc.groups[s.group]; ok {
+		delete(group, s)
+	}
 }

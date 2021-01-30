@@ -89,6 +89,7 @@ func (a *Asset) UnmarshalBinary(data []byte) error {
 			group:   ca.Snd.Group,
 			options: ca.Snd.Options,
 			context: audio.NewContext(44100),
+			volume:  1.0,
 		}
 
 	default:

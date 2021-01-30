@@ -30,6 +30,12 @@ func tick() {
 	case game.IsKeyJustPressed(engine.KeyR):
 		sound.Reset()
 
+	case game.IsKeyJustPressed(engine.KeyUp):
+		game.SetVolume("sfx", game.Volume("sfx")+0.1)
+
+	case game.IsKeyJustPressed(engine.KeyDown):
+		game.SetVolume("sfx", game.Volume("sfx")-0.1)
+
 	}
 }
 

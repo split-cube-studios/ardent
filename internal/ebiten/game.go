@@ -21,7 +21,7 @@ type Game struct {
 
 	*component
 	Input
-	SoundControl
+	*SoundControl
 }
 
 // NewGame returns an instantiated game.
@@ -32,14 +32,19 @@ func NewGame(
 	tickFunc func(),
 	layoutFunc func(int, int) (int, int),
 ) *Game {
+
+	soundControl := NewSoundControl()
+	component := newComponent(soundControl)
+
 	return &Game{
-		title:      title,
-		w:          w,
-		h:          h,
-		flags:      flags,
-		tickFunc:   tickFunc,
-		layoutFunc: layoutFunc,
-		component:  newComponent(),
+		title:        title,
+		w:            w,
+		h:            h,
+		flags:        flags,
+		tickFunc:     tickFunc,
+		layoutFunc:   layoutFunc,
+		component:    component,
+		SoundControl: soundControl,
 	}
 }
 

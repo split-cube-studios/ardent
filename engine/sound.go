@@ -18,6 +18,12 @@ type Sound interface {
 	// Reset seeks to the start of the sound.
 	// Reset will also pause the track.
 	Reset()
+
+	// Close releases the underlying audio assets.
+	// The user must call Close when they are done using the Sound.
+	// Close does not need to be called when reusing
+	// a given sound.
+	Close()
 }
 
 // SoundControl is a global control

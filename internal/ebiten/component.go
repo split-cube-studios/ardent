@@ -21,11 +21,13 @@ import (
 
 type component struct {
 	assetCache map[string]Asset
+	sc         *SoundControl
 }
 
-func newComponent() *component {
+func newComponent(sc *SoundControl) *component {
 	return &component{
 		assetCache: make(map[string]Asset),
+		sc:         sc,
 	}
 }
 
@@ -128,7 +130,13 @@ func (c *component) NewSoundFromAssetPath(path string) (engine.Sound, error) {
 		return nil, err
 	}
 
-	return a.ToSound(), nil
+	sound := a.ToSound()
+	sound.(*Sound).sc = c.sc
+	sound.(*Sound).volume = c.sc.Volume(sound.(*Sound).group)
+
+	c.sc.addSound(sound.(*Sound))
+
+	return sound, nil
 }
 
 func (c *component) NewRenderer() engine.Renderer {

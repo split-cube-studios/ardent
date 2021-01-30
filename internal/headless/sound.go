@@ -15,6 +15,9 @@ func (s Sound) Pause() {}
 // Reset implements the Reset method of engine.Sound.
 func (s Sound) Reset() {}
 
+// Close implements the Close method of engine.Sound.
+func (s Sound) Close() {}
+
 // SoundControl is a headless implementation of engine.SoundControl.
 type SoundControl struct{}
 
