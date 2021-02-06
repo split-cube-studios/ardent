@@ -4,10 +4,10 @@ package headless
 type Sound struct{}
 
 // Play implements the Play method of engine.Sound.
-func (s Sound) Play() {}
+func (s Sound) Play() error { return nil }
 
 // Loop implements the Loop method of engine.Sound.
-func (s Sound) Loop() {}
+func (s Sound) Loop() error { return nil }
 
 // Pause implements the Pause method of engine.Sound.
 func (s Sound) Pause() {}

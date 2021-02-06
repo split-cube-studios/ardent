@@ -9,13 +9,15 @@ package engine
 // Groups can be modified in batches by a SoundControl.
 type Sound interface {
 	// Play plays the audio from the current
-	// position to the end.
-	Play()
+	// position to the end. An error may be returned
+	// if a sound cannot be properly decoded.
+	Play() error
 
 	// Loop plays the audio from the current
 	// position, and repeats from the start
-	// after reaching the end.
-	Loop()
+	// after reaching the end. An error may be returned
+	// if a sound cannot be properly decoded.
+	Loop() error
 
 	// Pause stops the sound for playing,
 	// keeping the current position.

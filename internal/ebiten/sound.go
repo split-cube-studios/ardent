@@ -7,6 +7,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/audio/vorbis"
+	"github.com/pkg/errors"
 )
 
 // Sound is an ebiten implementation of engine.Sound.
@@ -21,10 +22,10 @@ type Sound struct {
 }
 
 // Play implements the Play method of engine.Sound.
-func (s *Sound) Play() {
+func (s *Sound) Play() error {
 
 	if len(s.options) == 0 {
-		return
+		return nil
 	}
 
 	if s.player != nil {
@@ -32,23 +33,31 @@ func (s *Sound) Play() {
 	}
 
 	option := s.options[rand.Intn(len(s.options))]
-	sound, _ := vorbis.Decode(s.context, bytes.NewReader(option))
+	sound, err := vorbis.Decode(s.context, bytes.NewReader(option))
+	if err != nil {
+		return errors.Wrap(err, "failed to decode vorbis track")
+	}
 
 	// NOTE we may want to cache the players
-	s.player, _ = audio.NewPlayer(
+	s.player, err = audio.NewPlayer(
 		s.context,
 		sound,
 	)
+	if err != nil {
+		return errors.Wrap(err, "failed to create audio player")
+	}
 
 	s.player.SetVolume(s.volume)
 	s.player.Play()
+
+	return nil
 }
 
 // Loop implements the Loop method of engine.Sound.
-func (s *Sound) Loop() {
+func (s *Sound) Loop() error {
 
 	if len(s.options) == 0 {
-		return
+		return nil
 	}
 
 	if s.player != nil {
@@ -56,7 +65,10 @@ func (s *Sound) Loop() {
 	}
 
 	option := s.options[rand.Intn(len(s.options))]
-	sound, _ := vorbis.Decode(s.context, bytes.NewReader(option))
+	sound, err := vorbis.Decode(s.context, bytes.NewReader(option))
+	if err != nil {
+		return errors.Wrap(err, "failed to decode vorbis track")
+	}
 
 	loop := audio.NewInfiniteLoop(
 		sound,
@@ -64,10 +76,15 @@ func (s *Sound) Loop() {
 	)
 
 	// shouldn't return an error
-	s.player, _ = audio.NewPlayer(s.context, loop)
+	s.player, err = audio.NewPlayer(s.context, loop)
+	if err != nil {
+		return errors.Wrap(err, "failed to create audio player")
+	}
 
 	s.player.SetVolume(s.volume)
 	s.player.Play()
+
+	return nil
 }
 
 // Pause implements the Pause method of engine.Sound.
