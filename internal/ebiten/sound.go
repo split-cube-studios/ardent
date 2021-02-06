@@ -138,11 +138,23 @@ func (sc *SoundControl) SetVolume(group string, v float64) {
 		math.Min(1.0, v),
 	)
 
-	sc.volumes[group] = v
-
-	for sound := range sc.groups[group] {
-		sound.setVolume(v)
+	setGroupVolume := func(group map[*Sound]struct{}, v volume) {
+		sc.volumes[group] = v
+		for sound := range group {
+			sound.setVolume(v)
+		}
 	}
+
+	// update all groups
+	if group == "" {
+		for _, group := range groups {
+			setGroupVolume(group, v)
+		}
+		return
+	}
+
+	// update specified group
+	setGroupVolume(group, v)
 }
 
 // Volume implements the Volume method of engine.SoundControl.
