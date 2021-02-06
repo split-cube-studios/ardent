@@ -1,6 +1,12 @@
 package engine
 
 // Sound represents music or a sound effect.
+//
+// A Sound may have multiple options for its audio track,
+// randomly selection one each time the Sound is played.
+//
+// Sounds also belong to a specified control group.
+// Groups can be modified in batches by a SoundControl.
 type Sound interface {
 	// Play plays the audio from the current
 	// position to the end.
