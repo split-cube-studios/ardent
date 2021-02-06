@@ -118,6 +118,7 @@ func (s *Sound) setVolume(v float64) {
 
 // SoundControl is an ebiten implementation of engine.SoundControl.
 type SoundControl struct {
+	// Use map[*Sound]struct{} as a set for Sounds, allowing easy deletions.
 	groups  map[string]map[*Sound]struct{}
 	volumes map[string]float64
 }
