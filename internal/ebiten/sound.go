@@ -165,7 +165,7 @@ func (sc *SoundControl) SetVolume(group string, v float64) {
 
 	// update all groups
 	if group == "" {
-		for group, _ := range sc.groups {
+		for group := range sc.groups {
 			setGroupVolume(group, v)
 		}
 		return
