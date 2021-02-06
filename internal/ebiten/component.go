@@ -130,11 +130,11 @@ func (c *component) NewSoundFromAssetPath(path string) (engine.Sound, error) {
 		return nil, err
 	}
 
-	sound := a.ToSound()
-	sound.(*Sound).sc = c.sc
-	sound.(*Sound).volume = c.sc.Volume(sound.(*Sound).group)
+	sound := a.ToSound().(*Sound)
+	sound.sc = c.sc
+	sound.volume = c.sc.Volume(sound.group)
 
-	c.sc.addSound(sound.(*Sound))
+	c.sc.addSound(sound)
 
 	return sound, nil
 }
