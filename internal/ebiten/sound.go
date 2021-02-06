@@ -139,16 +139,16 @@ func (sc *SoundControl) SetVolume(group string, v float64) {
 		math.Min(1.0, v),
 	)
 
-	setGroupVolume := func(group map[*Sound]struct{}, v volume) {
+	setGroupVolume := func(group string, v float64) {
 		sc.volumes[group] = v
-		for sound := range group {
+		for sound := range sc.groups[group] {
 			sound.setVolume(v)
 		}
 	}
 
 	// update all groups
 	if group == "" {
-		for _, group := range groups {
+		for group, _ := range sc.groups {
 			setGroupVolume(group, v)
 		}
 		return
