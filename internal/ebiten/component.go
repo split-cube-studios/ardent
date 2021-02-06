@@ -21,11 +21,13 @@ import (
 
 type component struct {
 	assetCache map[string]Asset
+	sc         *SoundControl
 }
 
-func newComponent() *component {
+func newComponent(sc *SoundControl) *component {
 	return &component{
 		assetCache: make(map[string]Asset),
+		sc:         sc,
 	}
 }
 
@@ -34,13 +36,7 @@ func (c *component) NewAssetFromPath(path string) (engine.Asset, error) {
 		return &asset, nil
 	}
 
-	f, err := os.Open(path)
-	if err != nil {
-		return nil, fmt.Errorf("failed to open asset path: %w", err)
-	}
-	defer f.Close()
-
-	d, err := ioutil.ReadAll(f)
+	d, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, fmt.Errorf("failed to decode asset: %w", err)
 	}
@@ -126,6 +122,21 @@ func (c *component) NewAnimationFromAssetPath(path string) (engine.Animation, er
 	}
 
 	return a.ToAnimation(), nil
+}
+
+func (c *component) NewSoundFromAssetPath(path string) (engine.Sound, error) {
+	a, err := c.NewAssetFromPath(path)
+	if err != nil {
+		return nil, err
+	}
+
+	sound := a.ToSound().(*Sound)
+	sound.sc = c.sc
+	sound.volume = c.sc.Volume(sound.group)
+
+	c.sc.addSound(sound)
+
+	return sound, nil
 }
 
 func (c *component) NewRenderer() engine.Renderer {

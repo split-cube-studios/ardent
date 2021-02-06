@@ -34,6 +34,7 @@ func parseConfigFiles(dir string) (confs []config, err error) {
 				return err
 			}
 
+			// NOTE: sounds handle filepaths within the configuration
 			conf.filepath = strings.Replace(path, ".yml", ".png", 1)
 			confs = append(confs, conf)
 

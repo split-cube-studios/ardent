@@ -2,7 +2,9 @@ package assetutil
 
 import (
 	"fmt"
+	"image"
 	"image/png"
+	"io/ioutil"
 	"os"
 
 	"github.com/split-cube-studios/ardent/internal/common"
@@ -37,14 +39,20 @@ type config struct {
 		Start int  `yml:"start"`
 		End   int  `yml:"end"`
 	} `yml:"animations,omitempty"`
+
+	Sounds map[string][]string `yml:"sounds,omitempty"`
 }
 
 func (c config) toAsset() (*common.Asset, error) {
 	asset := common.NewAsset()
 
+	var err error
+
 	switch c.Type {
 	case "image":
 		asset.Type = common.AssetTypeImage
+		asset.Img.Image, err = c.parseImage()
+
 	case "atlas":
 		asset.Type = common.AssetTypeAtlas
 		for k, v := range c.Atlas {
@@ -55,6 +63,8 @@ func (c config) toAsset() (*common.Asset, error) {
 				H: uint16(v.H),
 			}
 		}
+		asset.Img.Image, err = c.parseImage()
+
 	case "animation":
 		asset.Type = common.AssetTypeAnimation
 		asset.AnimWidth = uint16(c.FrameWidth)
@@ -68,9 +78,33 @@ func (c config) toAsset() (*common.Asset, error) {
 				End:   uint16(v.End),
 			}
 		}
+		asset.Img.Image, err = c.parseImage()
+
+	case "sound":
+		asset.Type = common.AssetTypeSound
+
+		for group, sounds := range c.Sounds {
+
+			asset.Snd.Group = group
+
+			for _, sound := range sounds {
+				data, err := ioutil.ReadFile(sound)
+				if err != nil {
+					return nil, err
+				}
+
+				asset.Snd.Options = append(asset.Snd.Options, data)
+			}
+		}
+
 	default:
 		return nil, InvalidTypeError(c.Type)
 	}
+
+	return asset, err
+}
+
+func (c config) parseImage() (image.Image, error) {
 
 	f, err := os.Open(c.filepath)
 	if err != nil {
@@ -78,7 +112,5 @@ func (c config) toAsset() (*common.Asset, error) {
 	}
 	defer f.Close()
 
-	asset.Img.Image, err = png.Decode(f)
-
-	return asset, err
+	return png.Decode(f)
 }

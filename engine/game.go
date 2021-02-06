@@ -32,4 +32,5 @@ type Game interface {
 
 	Component
 	Input
+	SoundControl
 }
