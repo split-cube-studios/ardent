@@ -8,12 +8,12 @@ import (
 
 // Collider is a basic implementation of engine.Collider.
 type Collider struct {
-	m *Tilemap
+	m *engine.Tilemap
 }
 
 // SetTilemap sets the Collider's Tilemap.
-func (c *Collider) SetTilemap(m engine.Tilemap) {
-	c.m = m.(*Tilemap)
+func (c *Collider) SetTilemap(m *engine.Tilemap) {
+	c.m = m
 }
 
 // Resolve handles a collision.
@@ -29,23 +29,23 @@ func (c *Collider) Resolve(src, dst engine.Vec2) engine.Vec2 {
 	}
 
 	tileX, tileY := c.m.IndexToIso(ix, iy)
-	centerX, centerY := tileX, tileY-float64(c.m.Width-c.m.Width/4)
+	centerX, centerY := tileX, tileY-float64(c.m.TileWidth-c.m.TileWidth/4)
 
 	// tile edge
-	tp1 := engine.Vec2{X: centerX - float64(c.m.Width/2), Y: centerY}
-	tp2 := engine.Vec2{X: centerX, Y: centerY - float64(c.m.Width/4)}
+	tp1 := engine.Vec2{X: centerX - float64(c.m.TileWidth/2), Y: centerY}
+	tp2 := engine.Vec2{X: centerX, Y: centerY - float64(c.m.TileWidth/4)}
 
 	var right, bottom bool
 
 	// right corner
 	if src.X > centerX {
-		tp1.X += float64(c.m.Width)
+		tp1.X += float64(c.m.TileWidth)
 		right = true
 	}
 
 	// bottom corner
 	if src.Y > centerY {
-		tp2.Y += float64(c.m.Width / 2)
+		tp2.Y += float64(c.m.TileWidth / 2)
 		bottom = true
 	}
 
@@ -65,23 +65,23 @@ func (c *Collider) Resolve(src, dst engine.Vec2) engine.Vec2 {
 	// check secondary collision
 	if c.m.GetTileValue(nix, niy, 1) != 0 {
 		tileX, tileY = c.m.IndexToIso(nix, niy)
-		centerX, centerY = tileX, tileY-float64(c.m.Width-c.m.Width/4)
+		centerX, centerY = tileX, tileY-float64(c.m.TileWidth-c.m.TileWidth/4)
 
 		// tile edge
-		tp1 = engine.Vec2{X: centerX - float64(c.m.Width/2), Y: centerY}
-		tp2 = engine.Vec2{X: centerX, Y: centerY - float64(c.m.Width/4)}
+		tp1 = engine.Vec2{X: centerX - float64(c.m.TileWidth/2), Y: centerY}
+		tp2 = engine.Vec2{X: centerX, Y: centerY - float64(c.m.TileWidth/4)}
 
 		right, bottom = false, false
 
 		// right corner
 		if src.X > centerX {
-			tp1.X += float64(c.m.Width)
+			tp1.X += float64(c.m.TileWidth)
 			right = true
 		}
 
 		// bottom corner
 		if src.Y > centerY {
-			tp2.Y += float64(c.m.Width / 2)
+			tp2.Y += float64(c.m.TileWidth / 2)
 			bottom = true
 		}
 
@@ -117,17 +117,17 @@ func (c *Collider) Resolve(src, dst engine.Vec2) engine.Vec2 {
 	// check tertiary collison
 	if c.m.GetTileValue(nix, niy, 1) != 0 {
 		tileX, tileY = c.m.IndexToIso(nix, niy)
-		centerX, centerY = tileX, tileY-float64(c.m.Width-c.m.Width/4)
+		centerX, centerY = tileX, tileY-float64(c.m.TileWidth-c.m.TileWidth/4)
 
 		var xMod, yMod float64
 
-		if point.X < centerX-float64(c.m.Width/4) ||
-			point.X > centerX+float64(c.m.Width/4) {
+		if point.X < centerX-float64(c.m.TileWidth/4) ||
+			point.X > centerX+float64(c.m.TileWidth/4) {
 			yMod = 1
 		}
 
-		if point.Y < centerY-float64(c.m.Width/8) ||
-			point.Y > centerY+float64(c.m.Width/8) {
+		if point.Y < centerY-float64(c.m.TileWidth/8) ||
+			point.Y > centerY+float64(c.m.TileWidth/8) {
 			xMod = 1
 		}
 

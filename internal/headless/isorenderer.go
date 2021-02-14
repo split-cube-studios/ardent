@@ -10,4 +10,4 @@ type IsoRenderer struct {
 }
 
 // SetTilemap implements engine.IsoRenderer.
-func (i IsoRenderer) SetTilemap(tilemap engine.Tilemap) {}
+func (i IsoRenderer) SetTilemap(tilemap *engine.Tilemap) {}
