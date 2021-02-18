@@ -24,17 +24,18 @@ func (v Vec2) Lerp(v2 Vec2, t float64) Vec2 {
 
 // Distance returns the distance between the endpoints of v and v2.
 func (v Vec2) Distance(v2 Vec2) float64 {
-	return math.Sqrt(
-		math.Pow(v2.X-v.X, 2) +
-			math.Pow(v2.Y-v.Y, 2),
-	)
+	dy, dx := v2.Y-v.Y, v2.X-v.X
+	// math.Hypot(dy, dx) is more precise near over- and underflow, but it's
+	// slower, and those conditions should be rare[citation needed].
+	return math.Sqrt(dy*dy + dx*dx)
 }
 
 // Translate returns the translation of v
 // along angle d in radians by magnitude m.
 func (v Vec2) Translate(d float64, m float64) Vec2 {
+	dy, dx := math.Sincos(d)
 	return Vec2{
-		X: v.X + math.Cos(d)*m,
-		Y: v.Y + math.Sin(d)*m,
+		X: v.X + dx*m,
+		Y: v.Y + dy*m,
 	}
 }

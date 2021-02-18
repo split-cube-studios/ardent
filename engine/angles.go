@@ -19,7 +19,7 @@ const diag = 3.435 * math.Pi / 180
 
 // CardinalToAngle is a map of cardinal directions
 // to angles in dimetric space.
-var CardinalToAngle = map[byte]float64{
+var CardinalToAngle = [...]float64{
 	N:  3 * math.Pi / 2,            // 90
 	E:  0,                          // 0
 	S:  math.Pi / 2,                // 270
