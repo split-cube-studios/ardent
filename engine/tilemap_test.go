@@ -248,7 +248,7 @@ func TestInBounds(t *testing.T) {
 	testTilemap.InBounds(image.Pt(0, 0), 0)
 }
 
-func IsClear(t *testing.T) {
+func TestIsClear(t *testing.T) {
 
 	// no scale
 	for z := 0; z < 2; z++ {
@@ -288,3 +288,7 @@ func IsClear(t *testing.T) {
 	}()
 	testTilemap.IsClear(image.Pt(0, 0), 0, 0)
 }
+
+func TestContainsAll(t *testing.T) {}
+
+func TestFill(t *testing.T) {}

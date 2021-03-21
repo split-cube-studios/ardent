@@ -4,4 +4,4 @@ assetutil:
 	go build ./cmd/assetutil
 
 test:
-	go test ./...
+	go test ./... -cover

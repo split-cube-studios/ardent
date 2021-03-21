@@ -1,8 +1,8 @@
 package engine
 
 import (
-	"fmt"
 	"image"
+	"image/color"
 	"math"
 )
 
@@ -90,7 +90,6 @@ func (t *Tilemap) Neighbors(p image.Point, size int) (c []image.Point) {
 	for i := 0; i < 4; i++ {
 
 		np := p.Add(ndirs[i].Mul(size))
-		fmt.Println(np)
 		if !t.InBounds(np, size) {
 			continue
 		}
@@ -114,6 +113,12 @@ func (t *Tilemap) InBounds(p image.Point, size int) bool {
 // IsClear indicates whether a point of a given size
 // contains only empty tiles.
 func (t *Tilemap) IsClear(p image.Point, z, size int) bool {
+	return t.ContainsAll(0, p, z, size)
+}
+
+// ContainsAll indicates whether a point of a given size
+// contains only the specified tile.
+func (t *Tilemap) ContainsAll(tile int, p image.Point, z, size int) bool {
 
 	if size < 1 {
 		panic("invalid size")
@@ -125,11 +130,75 @@ func (t *Tilemap) IsClear(p image.Point, z, size int) bool {
 
 	for x := p.X; x < p.X+size; x++ {
 		for y := p.Y; y < p.Y+size; y++ {
-			if t.Data[z][y][x] != 0 {
+			if t.Data[z][y][x] != tile {
 				return false
 			}
 		}
 	}
 
 	return true
+}
+
+func (t *Tilemap) ContainsAny(tile int, p image.Point, z, size int) bool {
+
+	if size < 1 {
+		panic("invalid size")
+	}
+
+	if !t.InBounds(p, size) {
+		return false
+	}
+
+	for x := p.X; x < p.X+size; x++ {
+		for y := p.Y; y < p.Y+size; y++ {
+			if t.Data[z][y][x] == tile {
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
+// Fill sets tile values for a given location and size.
+func (t *Tilemap) Fill(tile int, p image.Point, z, size int) []image.Point {
+
+	if size < 1 {
+		panic("invalid size")
+	}
+
+	points := make([]image.Point, 0, size*size)
+
+	for x := p.X; x < p.X+size; x++ {
+		for y := p.Y; y < p.Y+size; y++ {
+			if t.InBounds(image.Pt(x, y), 1) {
+				points = append(points, image.Pt(x, y))
+				t.Data[z][y][x] = tile
+			}
+		}
+	}
+
+	return points
+}
+
+// Image take a tile to color map and returns an image of the tilemap.
+func (t *Tilemap) Image(colors map[int]color.Color) image.Image {
+
+	img := image.NewRGBA(t.bounds)
+
+	for x := 0; x < t.bounds.Dx(); x++ {
+		for y := 0; y < t.bounds.Dy(); y++ {
+
+			v1, v2 := t.Data[0][y][x], t.Data[1][y][x]
+
+			if c, ok := colors[v1]; ok {
+				img.Set(x, y, c)
+			}
+			if c, ok := colors[v2]; ok {
+				img.Set(x, y, c)
+			}
+		}
+	}
+
+	return img
 }

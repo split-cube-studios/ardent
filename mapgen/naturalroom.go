@@ -1,0 +1,136 @@
+package mapgen
+
+import (
+	"image"
+	"math/rand"
+)
+
+type NaturalRoom struct {
+	w, h   int
+	data   [2]map[image.Point]int
+	policy RoomPolicy
+}
+
+func NewNaturalRoom(w, h, floorTile int, policy RoomPolicy) *NaturalRoom {
+
+	nr := &NaturalRoom{
+		w:      w,
+		h:      h,
+		policy: policy,
+	}
+
+	nr.data[0] = make(map[image.Point]int)
+	nr.data[1] = make(map[image.Point]int)
+
+	// tilebomb room
+	var tiles []image.Point
+
+	const scale = 5
+
+	for x := w / scale; x < w-(w/scale); x++ {
+		for y := h / scale; y < h-(h/scale); y++ {
+			tiles = append(tiles, image.Pt(x, y))
+			nr.data[0][image.Pt(x, y)] = floorTile
+			nr.data[1][image.Pt(x, y)] = 0
+		}
+	}
+
+	rand.Shuffle(len(tiles), func(i, j int) {
+		tiles[i], tiles[j] = tiles[j], tiles[i]
+	})
+
+	iters := len(tiles) * 3
+
+	smOffsets := []image.Point{
+		image.Pt(-1, 0),
+		image.Pt(1, 0),
+		image.Pt(0, 1),
+		image.Pt(0, -1),
+	}
+
+	lgOffsets := []image.Point{
+		image.Pt(-2, 0),
+		image.Pt(2, 0),
+		image.Pt(0, 2),
+		image.Pt(0, -2),
+		image.Pt(1, 1),
+		image.Pt(1, -1),
+		image.Pt(-1, 1),
+		image.Pt(-1, -1),
+	}
+
+	for n := 0; n < iters; n++ {
+
+		var i int
+		if len(tiles) >= 15 && rand.Intn(3) == 0 {
+			i = rand.Intn(15) + len(tiles) - 15
+		} else if len(tiles) == 1 {
+			i = 0
+		} else {
+			i = rand.Intn(len(tiles) / 2)
+		}
+
+		offsets := smOffsets
+		if rand.Intn(20) == 0 {
+			offsets = append(offsets, lgOffsets...)
+		}
+
+		for _, offset := range offsets {
+
+			pt := tiles[i].Add(offset)
+			if !pt.In(image.Rect(0, 0, w, h)) {
+				continue
+			}
+
+			nr.data[0][pt] = floorTile
+			nr.data[1][pt] = 0
+
+			tiles = append(tiles, pt)
+		}
+
+		if len(tiles) == 1 {
+			break
+		}
+
+		tiles[i] = tiles[len(tiles)-1]
+		tiles = tiles[:len(tiles)-1]
+	}
+
+	return nr
+}
+
+func (nr *NaturalRoom) Policy() RoomPolicy {
+	return nr.policy
+}
+
+func (nr *NaturalRoom) Data() [2]map[image.Point]int {
+	return nr.data
+}
+
+func (nr *NaturalRoom) Bounds() image.Rectangle {
+	return image.Rect(0, 0, nr.w, nr.h)
+}
+
+func (nr *NaturalRoom) Hallways() map[image.Point]Hallway {
+
+	hallways := make(map[image.Point]Hallway)
+
+	const doorWidth, hallWidth = 3, 1
+
+	for x := 1; x < nr.w-1; x++ {
+		hNorth := NewBasicHallway(doorWidth, hallWidth, 1, HallwayNorth)
+		hallways[image.Pt(x, 0)] = hNorth
+
+		hSouth := NewBasicHallway(doorWidth, hallWidth, 1, HallwaySouth)
+		hallways[image.Pt(x, nr.h-1)] = hSouth
+	}
+	for y := 1; y < nr.h-1; y++ {
+		hWest := NewBasicHallway(doorWidth, hallWidth, 1, HallwayWest)
+		hallways[image.Pt(0, y)] = hWest
+
+		hEast := NewBasicHallway(doorWidth, hallWidth, 1, HallwayEast)
+		hallways[image.Pt(nr.w-1, y)] = hEast
+	}
+
+	return hallways
+}
