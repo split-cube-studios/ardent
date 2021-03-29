@@ -26,18 +26,37 @@ func NewNaturalRoom(w, h, floorTile int, policy RoomPolicy) *NaturalRoom {
 	// tilebomb room
 	var points, tiles []image.Point
 
+	cx, cy := w/2, h/2
+
 	for x := 0; x < w; x++ {
 		for y := 0; y < h; y++ {
-			points = append(tiles, image.Pt(x, y))
-			tiles = append(tiles, image.Pt(x, y))
+
+			ex := float64(x-cx) * float64(x-cx) / float64((w/2)*(w/2))
+			ey := float64(y-cy) * float64(y-cy) / float64((h/2)*(h/2))
+
+			if ex+ey <= 1 {
+
+				// randomly skip filling
+				if rand.Intn(3) == 0 {
+					continue
+				}
+
+				points = append(tiles, image.Pt(x, y))
+				tiles = append(tiles, image.Pt(x, y))
+			}
 		}
 	}
+
+	bounds := image.Rect(
+		tiles[0].X, tiles[0].Y,
+		tiles[len(tiles)-1].X, tiles[len(tiles)-1].Y,
+	)
 
 	rand.Shuffle(len(tiles), func(i, j int) {
 		tiles[i], tiles[j] = tiles[j], tiles[i]
 	})
 
-	iters := len(tiles) * 5
+	iters := len(tiles) * 7
 
 	smOffsets := []image.Point{
 		image.Pt(-1, 0),
@@ -56,11 +75,6 @@ func NewNaturalRoom(w, h, floorTile int, policy RoomPolicy) *NaturalRoom {
 		image.Pt(-1, 1),
 		image.Pt(-1, -1),
 	}
-
-	bounds := image.Rect(
-		tiles[0].X, tiles[0].Y,
-		tiles[len(tiles)-1].X, tiles[len(tiles)-1].Y,
-	)
 
 	for n := 0; n < iters; n++ {
 
