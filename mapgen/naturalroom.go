@@ -26,13 +26,13 @@ func NewNaturalRoom(w, h, floorTile int, policy RoomPolicy) *NaturalRoom {
 	// tilebomb room
 	var points, tiles []image.Point
 
-	cx, cy := w/2, h/2
+	rx, ry := w/2, h/2
 
 	for x := 0; x < w; x++ {
 		for y := 0; y < h; y++ {
 
-			ex := float64(x-cx) * float64(x-cx) / float64((w/2)*(w/2))
-			ey := float64(y-cy) * float64(y-cy) / float64((h/2)*(h/2))
+			ex := float64(x-rx) * float64(x-rx) / float64(rx*rx)
+			ey := float64(y-ry) * float64(y-ry) / float64(ry*ry)
 
 			if ex+ey <= 1 {
 
