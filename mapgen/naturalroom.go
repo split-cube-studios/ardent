@@ -2,6 +2,7 @@ package mapgen
 
 import (
 	"image"
+	"math"
 	"math/rand"
 )
 
@@ -23,15 +24,12 @@ func NewNaturalRoom(w, h, floorTile int, policy RoomPolicy) *NaturalRoom {
 	nr.data[1] = make(map[image.Point]int)
 
 	// tilebomb room
-	var tiles []image.Point
+	var points, tiles []image.Point
 
-	const scale = 5
-
-	for x := w / scale; x < w-(w/scale); x++ {
-		for y := h / scale; y < h-(h/scale); y++ {
+	for x := 0; x < w; x++ {
+		for y := 0; y < h; y++ {
+			points = append(tiles, image.Pt(x, y))
 			tiles = append(tiles, image.Pt(x, y))
-			nr.data[0][image.Pt(x, y)] = floorTile
-			nr.data[1][image.Pt(x, y)] = 0
 		}
 	}
 
@@ -39,7 +37,7 @@ func NewNaturalRoom(w, h, floorTile int, policy RoomPolicy) *NaturalRoom {
 		tiles[i], tiles[j] = tiles[j], tiles[i]
 	})
 
-	iters := len(tiles) * 3
+	iters := len(tiles) * 5
 
 	smOffsets := []image.Point{
 		image.Pt(-1, 0),
@@ -59,11 +57,17 @@ func NewNaturalRoom(w, h, floorTile int, policy RoomPolicy) *NaturalRoom {
 		image.Pt(-1, -1),
 	}
 
+	bounds := image.Rect(
+		tiles[0].X, tiles[0].Y,
+		tiles[len(tiles)-1].X, tiles[len(tiles)-1].Y,
+	)
+
 	for n := 0; n < iters; n++ {
 
 		var i int
-		if len(tiles) >= 15 && rand.Intn(3) == 0 {
-			i = rand.Intn(15) + len(tiles) - 15
+		if rand.Intn(3) == 0 {
+			o := int(math.Min(float64(len(tiles)), 15))
+			i = rand.Intn(o) + len(tiles) - o
 		} else if len(tiles) == 1 {
 			i = 0
 		} else {
@@ -78,13 +82,19 @@ func NewNaturalRoom(w, h, floorTile int, policy RoomPolicy) *NaturalRoom {
 		for _, offset := range offsets {
 
 			pt := tiles[i].Add(offset)
-			if !pt.In(image.Rect(0, 0, w, h)) {
-				continue
+
+			if pt.X < bounds.Min.X {
+				bounds.Min.X = pt.X
+			} else if pt.X > bounds.Max.X {
+				bounds.Max.X = pt.X
+			}
+			if pt.Y < bounds.Min.Y {
+				bounds.Min.Y = pt.Y
+			} else if pt.Y > bounds.Max.Y {
+				bounds.Max.Y = pt.Y
 			}
 
-			nr.data[0][pt] = floorTile
-			nr.data[1][pt] = 0
-
+			points = append(points, pt)
 			tiles = append(tiles, pt)
 		}
 
@@ -95,6 +105,16 @@ func NewNaturalRoom(w, h, floorTile int, policy RoomPolicy) *NaturalRoom {
 		tiles[i] = tiles[len(tiles)-1]
 		tiles = tiles[:len(tiles)-1]
 	}
+
+	for _, pt := range points {
+
+		pt = pt.Sub(bounds.Min).Add(image.Pt(1, 1))
+
+		nr.data[0][pt] = floorTile
+		nr.data[1][pt] = 0
+	}
+
+	nr.w, nr.h = bounds.Dx()+2, bounds.Dy()+2
 
 	return nr
 }

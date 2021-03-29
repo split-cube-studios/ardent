@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"image"
 	"math/rand"
+	"sort"
 
 	"github.com/split-cube-studios/ardent/engine"
 )
@@ -18,6 +19,9 @@ import (
 type Generator struct {
 	GeneratorOptions
 
+	requiredRooms []Room
+	optionalRooms []Room
+
 	// cache of room boundaries for quick lookup
 	roomBounds map[image.Rectangle]Room
 }
@@ -28,8 +32,7 @@ type GeneratorOptions struct {
 	Width, Height int
 	TileWidth     int
 
-	RequiredRooms []Room
-	OptionalRooms []Room
+	Rooms []Room
 
 	RoomAlign int
 
@@ -41,10 +44,34 @@ type GeneratorOptions struct {
 // NewGenerator returns an instantiated *Generator
 // with the given GeneratorOptions configuration.
 func NewGenerator(options GeneratorOptions) *Generator {
-	return &Generator{
+
+	g := &Generator{
 		GeneratorOptions: options,
 		roomBounds:       make(map[image.Rectangle]Room),
 	}
+
+	for _, room := range options.Rooms {
+		if room.Policy().Required {
+			g.requiredRooms = append(g.requiredRooms, room)
+			continue
+		}
+		g.optionalRooms = append(g.optionalRooms, room)
+	}
+
+	sort.Slice(g.requiredRooms, func(i, j int) bool {
+		if g.requiredRooms[i].Policy().Alignment != nil {
+			return true
+		}
+		return false
+	})
+	sort.Slice(g.optionalRooms, func(i, j int) bool {
+		if g.optionalRooms[i].Policy().Alignment != nil {
+			return true
+		}
+		return false
+	})
+
+	return g
 }
 
 // Generate creates a new tilemap based on the
@@ -54,14 +81,14 @@ func NewGenerator(options GeneratorOptions) *Generator {
 func (g *Generator) Generate() (*engine.Tilemap, error) {
 
 	// place required rooms
-	for _, room := range g.RequiredRooms {
+	for _, room := range g.requiredRooms {
 		if err := g.placeRoom(room); err != nil {
 			return nil, fmt.Errorf("failed to generate tilemap: %w", err)
 		}
 	}
 
 	// place optional rooms
-	for _, room := range g.OptionalRooms {
+	for _, room := range g.optionalRooms {
 		// handle errors if other error cases arise
 		_ = g.placeRoom(room)
 	}
@@ -132,18 +159,23 @@ tries:
 
 		var x, y int
 
-		// snap rooms to alignment
-		if g.RoomAlign > 1 {
-			x = rand.Intn(
-				(g.Width-bounds.Dx())/g.RoomAlign,
-			) * g.RoomAlign
-			y = rand.Intn(
-				(g.Height-bounds.Dy())/g.RoomAlign,
-			) * g.RoomAlign
+		align := room.Policy().Alignment
+		if align != nil {
+			x = int(float64(g.Width)*align.X) - bounds.Dx()/2
+			y = int(float64(g.Height)*align.Y) - bounds.Dy()/2
 		} else {
-
-			x = rand.Intn(g.Width - bounds.Dx())
-			y = rand.Intn(g.Height - bounds.Dy())
+			// snap rooms to alignment
+			if g.RoomAlign > 1 {
+				x = rand.Intn(
+					(g.Width-bounds.Dx())/g.RoomAlign,
+				) * g.RoomAlign
+				y = rand.Intn(
+					(g.Height-bounds.Dy())/g.RoomAlign,
+				) * g.RoomAlign
+			} else {
+				x = rand.Intn(g.Width - bounds.Dx())
+				y = rand.Intn(g.Height - bounds.Dy())
+			}
 		}
 
 		bounds = bounds.Add(image.Pt(

@@ -20,25 +20,61 @@ func main() {
 
 	const w, h = 512, 512
 
-	requiredRooms := make([]mapgen.Room, 100)
-	for i := 0; i < len(requiredRooms); i++ {
-		requiredRooms[i] = mapgen.NewNaturalRoom(
-			rand.Intn(5)*6+12, rand.Intn(5)*6+12,
+	rooms := make([]mapgen.Room, 60)
+	for i := 0; i < len(rooms); i++ {
+		rooms[i] = mapgen.NewNaturalRoom(
+			rand.Intn(18)+6, rand.Intn(18)+6,
 			1, mapgen.RoomPolicy{
 				Required: true,
 			},
 		)
 	}
 
+	rooms = append(rooms, mapgen.NewNaturalRoom(
+		60, 60,
+		1, mapgen.RoomPolicy{
+			Required:  true,
+			Alignment: mapgen.RoomAlignCenter,
+		},
+	))
+	rooms = append(rooms, mapgen.NewNaturalRoom(
+		40, 40,
+		1, mapgen.RoomPolicy{
+			Required:  true,
+			Alignment: mapgen.RoomAlignTopLeft,
+		},
+	))
+	rooms = append(rooms, mapgen.NewNaturalRoom(
+		40, 40,
+		1, mapgen.RoomPolicy{
+			Required:  true,
+			Alignment: mapgen.RoomAlignTopRight,
+		},
+	))
+	rooms = append(rooms, mapgen.NewNaturalRoom(
+		40, 40,
+		1, mapgen.RoomPolicy{
+			Required:  true,
+			Alignment: mapgen.RoomAlignBottomLeft,
+		},
+	))
+	rooms = append(rooms, mapgen.NewNaturalRoom(
+		40, 40,
+		1, mapgen.RoomPolicy{
+			Required:  true,
+			Alignment: mapgen.RoomAlignBottomRight,
+		},
+	))
+
 	g := mapgen.NewGenerator(
 		mapgen.GeneratorOptions{
-			Width:         w,
-			Height:        h,
-			RequiredRooms: requiredRooms,
-			RoomAlign:     4,
-			PathAlg:       mapgen.NewBasicPath(6, 1, 2),
-			FloorTile:     1,
-			WallTile:      2,
+			Width:     w,
+			Height:    h,
+			Rooms:     rooms,
+			RoomAlign: 4,
+			PathAlg:   mapgen.NewBasicPath(6, 1, 2),
+			FloorTile: 1,
+			WallTile:  2,
 		},
 	)
 

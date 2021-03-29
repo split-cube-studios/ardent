@@ -23,4 +23,32 @@ type RoomPolicy struct {
 	// CanOverlap indicates if the room may
 	// overlap with other rooms.
 	CanOverlap bool
+	// Alignment indicates a position the room
+	// should be placed to the generator.
+	Alignment *RoomAlignment
 }
+
+// RoomAlignment stores the central alignment
+// for a room based on a percent of world size.
+type RoomAlignment struct {
+	X, Y float64
+}
+
+// Default room alignments.
+var (
+	RoomAlignCenter = &RoomAlignment{
+		X: 0.5, Y: 0.5,
+	}
+	RoomAlignTopLeft = &RoomAlignment{
+		X: 0.25, Y: 0.25,
+	}
+	RoomAlignTopRight = &RoomAlignment{
+		X: 0.75, Y: 0.25,
+	}
+	RoomAlignBottomLeft = &RoomAlignment{
+		X: 0.25, Y: 0.75,
+	}
+	RoomAlignBottomRight = &RoomAlignment{
+		X: 0.75, Y: 0.75,
+	}
+)
