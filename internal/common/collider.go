@@ -23,6 +23,8 @@ func (c *Collider) Resolve(src, dst engine.Vec2) engine.Vec2 {
 	}
 
 	ix, iy := c.m.IsoToIndex(dst.X, dst.Y)
+	ix++
+	iy++
 
 	if c.m.GetTileValue(ix, iy, 1) == 0 {
 		return dst
