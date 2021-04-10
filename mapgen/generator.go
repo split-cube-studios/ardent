@@ -39,6 +39,10 @@ type GeneratorOptions struct {
 	PathAlg Path
 
 	FloorTile, WallTile int
+
+	Mapper map[int]engine.Image
+
+	OverlapEvent engine.TileOverlapEvent
 }
 
 // NewGenerator returns an instantiated *Generator
@@ -114,12 +118,10 @@ func (g *Generator) Generate() (*engine.Tilemap, error) {
 	}
 
 	tmap := engine.NewTilemap(
-		0, // needs to be set by user
+		g.TileWidth,
 		data,
-		// allow mapper and overlap event
-		// to be set by user
-		nil,
-		nil,
+		g.Mapper,
+		g.OverlapEvent,
 	)
 
 	// fill tmap with room data
