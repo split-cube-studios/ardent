@@ -7,17 +7,19 @@ import (
 )
 
 type NaturalRoom struct {
-	w, h   int
-	data   [2]map[image.Point]int
-	policy RoomPolicy
+	w, h      int
+	data      [2]map[image.Point]int
+	policy    RoomPolicy
+	floorTile int
 }
 
 func NewNaturalRoom(w, h, floorTile int, policy RoomPolicy) *NaturalRoom {
 
 	nr := &NaturalRoom{
-		w:      w,
-		h:      h,
-		policy: policy,
+		w:         w,
+		h:         h,
+		floorTile: floorTile,
+		policy:    policy,
 	}
 
 	nr.data[0] = make(map[image.Point]int)
@@ -152,17 +154,17 @@ func (nr *NaturalRoom) Hallways() map[image.Point]Hallway {
 	const doorWidth, hallWidth = 3, 1
 
 	for x := 1; x < nr.w-1; x++ {
-		hNorth := NewBasicHallway(doorWidth, hallWidth, 1, HallwayNorth)
+		hNorth := NewBasicHallway(doorWidth, hallWidth, nr.floorTile, HallwayNorth)
 		hallways[image.Pt(x, 0)] = hNorth
 
-		hSouth := NewBasicHallway(doorWidth, hallWidth, 1, HallwaySouth)
+		hSouth := NewBasicHallway(doorWidth, hallWidth, nr.floorTile, HallwaySouth)
 		hallways[image.Pt(x, nr.h-1)] = hSouth
 	}
 	for y := 1; y < nr.h-1; y++ {
-		hWest := NewBasicHallway(doorWidth, hallWidth, 1, HallwayWest)
+		hWest := NewBasicHallway(doorWidth, hallWidth, nr.floorTile, HallwayWest)
 		hallways[image.Pt(0, y)] = hWest
 
-		hEast := NewBasicHallway(doorWidth, hallWidth, 1, HallwayEast)
+		hEast := NewBasicHallway(doorWidth, hallWidth, nr.floorTile, HallwayEast)
 		hallways[image.Pt(nr.w-1, y)] = hEast
 	}
 

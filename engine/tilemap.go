@@ -4,6 +4,7 @@ import (
 	"image"
 	"image/color"
 	"math"
+	"math/rand"
 )
 
 // Tilemap contains tile data for
@@ -20,6 +21,8 @@ type Tilemap struct {
 	OverlapEvent TileOverlapEvent
 
 	bounds image.Rectangle
+
+	cache map[int][]image.Point
 }
 
 // TileOverlapEvent updates renderer state in the case of a tile overlap.
@@ -201,4 +204,34 @@ func (t *Tilemap) Image(colors map[int]color.Color) image.Image {
 	}
 
 	return img
+}
+
+// BuildCache rebuilds a tile lookup cache.
+func (t *Tilemap) BuildCache() {
+
+	t.cache = map[int][]image.Point{}
+
+	for x := 0; x < t.bounds.Dx(); x++ {
+		for y := 0; y < t.bounds.Dy(); y++ {
+			floor := t.Data[0][y][x]
+			wall := t.Data[1][y][x]
+			t.cache[floor] = append(t.cache[floor], image.Pt(x, y))
+			t.cache[wall] = append(t.cache[wall], image.Pt(x, y))
+		}
+	}
+}
+
+// RandomPos returns a random position in isometric space
+// contained within a given tile.
+func (t *Tilemap) RandomPos(tile int) (float64, float64) {
+
+	tiles := t.cache[tile]
+
+	tp := tiles[rand.Intn(len(tiles))]
+
+	x, y := t.IndexToIso(tp.X-1, tp.Y-1)
+	x += rand.Float64() * 128
+	y -= rand.Float64() * 32
+
+	return x, y
 }

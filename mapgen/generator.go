@@ -146,6 +146,8 @@ func (g *Generator) Generate() (*engine.Tilemap, error) {
 		g.PathAlg.PostProcess(tmap)
 	}
 
+	tmap.BuildCache()
+
 	return tmap, nil
 }
 
