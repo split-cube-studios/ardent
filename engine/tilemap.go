@@ -103,6 +103,23 @@ func (t *Tilemap) Neighbors(p image.Point, size int) (c []image.Point) {
 	return
 }
 
+// WallsAround returns positions of wall tiles around a given position
+// within a given range.
+func (t *Tilemap) WallsAround(p image.Point, dist int) (c []image.Point) {
+
+	for x := p.X - dist; x < p.X+dist; x++ {
+		for y := p.Y - dist; y < p.Y+dist; y++ {
+
+			tile := t.GetTileValue(x, y, 1)
+			if tile != 0 {
+				c = append(c, image.Pt(x, y))
+			}
+		}
+	}
+
+	return
+}
+
 // InBounds indicates if a point with a given size is within the tilemap.
 func (t *Tilemap) InBounds(p image.Point, size int) bool {
 

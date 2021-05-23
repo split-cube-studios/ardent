@@ -7,8 +7,29 @@ type Vec2 struct {
 	X, Y float64
 }
 
-// AngleTo returns the angle in radians
-// between two vectors.
+// Add adds two vectors together
+func (v Vec2) Add(v2 Vec2) Vec2 {
+	return Vec2{
+		X: v.X + v2.X,
+		Y: v.Y + v2.Y,
+	}
+}
+
+// Sub subtracts a vector.
+func (v Vec2) Sub(v2 Vec2) Vec2 {
+	return Vec2{
+		X: v.X - v2.X,
+		Y: v.Y - v2.Y,
+	}
+}
+
+// Angle returns the angle in radians.
+func (v Vec2) Angle() float64 {
+	return Vec2{}.AngleTo(v)
+}
+
+// AngleTo returns the angle from the end of
+// vector v to the end of vector v2.
 func (v Vec2) AngleTo(v2 Vec2) float64 {
 	return math.Atan2(v2.Y-v.Y, v2.X-v.X)
 }
@@ -37,4 +58,28 @@ func (v Vec2) Translate(d float64, m float64) Vec2 {
 		X: v.X + math.Cos(d)*m,
 		Y: v.Y + math.Sin(d)*m,
 	}
+}
+
+// Scale multiplies vector v by a scalar value s
+// and returns the result.
+func (v Vec2) Scale(s float64) Vec2 {
+	return Vec2{
+		X: v.X * s,
+		Y: v.Y * s,
+	}
+}
+
+// Dot returns the dot product between two vectors.
+func (v Vec2) Dot(v2 Vec2) float64 {
+	return v.X*v2.X + v.Y*v2.Y
+}
+
+// Length returns the length of a vector.
+func (v Vec2) Length() float64 {
+	return math.Sqrt(v.Dot(v))
+}
+
+// Normalize normalizes a vector magnitude.
+func (v Vec2) Normalize() Vec2 {
+	return v.Scale(1 / v.Length())
 }

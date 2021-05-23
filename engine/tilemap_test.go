@@ -292,3 +292,5 @@ func TestIsClear(t *testing.T) {
 func TestContainsAll(t *testing.T) {}
 
 func TestFill(t *testing.T) {}
+
+func TestWallsAround(t *testing.T) {}

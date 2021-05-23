@@ -9,19 +9,19 @@ import (
 type Context struct {
 	Renderer
 	Collider
+	*Tilemap
 
 	partitionMap *PartitionMap
 
-	entities   map[string][]Entity
 	entitySwap []Entity
 }
 
 // NewContext creates a Context with the given Renderer and Collider.
-func NewContext(renderer Renderer, collider Collider) *Context {
+func NewContext(renderer Renderer, collider Collider, tilemap *Tilemap) *Context {
 	ctx := &Context{
 		Renderer: renderer,
 		Collider: collider,
-		entities: make(map[string][]Entity),
+		Tilemap:  tilemap,
 	}
 
 	// TODO configurable values
@@ -37,7 +37,12 @@ func (c *Context) AddEntity(entities ...Entity) {
 
 // GetEntities gets the Context's Entities.
 func (c *Context) GetEntities(class string) []Entity {
-	return c.entities[class]
+	entries := c.partitionMap.Class(class)
+	entities := make([]Entity, len(entries))
+	for i, entry := range entries {
+		entities[i] = entry.(Entity)
+	}
+	return entities
 }
 
 // Tick updates the Context's internal state.
