@@ -5,6 +5,8 @@ import (
 	"math"
 )
 
+// ContextMap handles context aware
+// steering behaviors for in-game AI.
 type ContextMap struct {
 	arc, dist float64
 	cmap, buf []float64
@@ -16,13 +18,23 @@ type ContextMap struct {
 	tmap *Tilemap
 }
 
+// ContextMapBehavior contains configurations
+// for specific steering behaviors.
 type ContextMapBehavior struct {
+	// Distance indicates the max distance for this behavior.
 	Distance float64
-	Mod      CMapModFunc
+	// Mod is a CMapModFunc to be applied to the calculations.
+	Mod CMapModFunc
 }
 
+// CMapModFunc is a function type that can be applied
+// to values calculated by a ContextMapBehavior.
 type CMapModFunc func([]float64)
 
+// NewContextMap returns an instantiated *ContextMap.
+// The resolution indicates how many discrete directions will be calculated.
+// The tilemap is only required if there is a corresponding wallBehavior.
+// All behavior parameters are optional.
 func NewContextMap(
 	resolution int,
 	tmap *Tilemap,
@@ -39,6 +51,7 @@ func NewContextMap(
 	}
 }
 
+// Angle returns a selected angle to move based on specified inputs.
 func (cm *ContextMap) Angle(origin Vec2, excite, inhibit []Vec2) float64 {
 
 	if cm.approachBehavior != nil {
