@@ -1,13 +1,14 @@
 package main
 
 import (
-	"github.com/split-cube-studios/ardent"
-	"github.com/split-cube-studios/ardent/engine"
-	"golang.org/x/image/draw"
 	"image"
 	"image/color"
 	"math/rand"
 	"time"
+
+	"github.com/split-cube-studios/ardent"
+	"github.com/split-cube-studios/ardent/engine"
+	"golang.org/x/image/draw"
 )
 
 const (
@@ -24,9 +25,9 @@ func main() {
 		"Snake",
 		w, h,
 		engine.FlagResizable,
-		snake.Tick, func(_ int, _ int) (int, int) {
-			return w, h
-		})
+		snake.Tick,
+		engine.LayoutFit(w, h),
+	)
 
 	snake.setup(game)
 

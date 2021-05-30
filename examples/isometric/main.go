@@ -43,9 +43,7 @@ func main() {
 			animation.Translate(x, y)
 		},
 		// layout function
-		func(ow, oh int) (int, int) {
-			return w, h
-		},
+		engine.LayoutFit(w, h),
 	)
 
 	assetutil.CreateAssets("./examples/isometric")

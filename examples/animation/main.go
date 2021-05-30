@@ -31,9 +31,7 @@ func main() {
 			counter++
 		},
 		// layout function
-		func(ow, oh int) (int, int) {
-			return ow, oh
-		},
+		nil,
 	)
 
 	// create new renderer and animation

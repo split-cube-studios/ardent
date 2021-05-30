@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/split-cube-studios/ardent"
-	"github.com/split-cube-studios/ardent/engine"
 	"image"
 	"image/color"
 	"math"
+
+	"github.com/split-cube-studios/ardent"
+	"github.com/split-cube-studios/ardent/engine"
 )
 
 var (
@@ -25,11 +26,7 @@ func main() {
 			square.Rotate(45.0 * 2 * math.Pi / 360)
 			square.Translate(float64(w)/2, float64(h)/2)
 		},
-		func(nw int, nh int) (int, int) {
-			w = nw
-			h = nh
-			return nw, nh
-		},
+		nil,
 	)
 
 	renderer := game.NewRenderer()
