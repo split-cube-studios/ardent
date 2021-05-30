@@ -11,6 +11,7 @@ Alongside basic features such as user input and rendering, Ardent offers a few k
 - Simple collisions
 - Spatial partitioning for large maps
 - State machines
+- Context based steering algorithm
 - And much more!
 
 ## Discord
