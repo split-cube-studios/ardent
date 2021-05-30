@@ -1,6 +1,6 @@
 module github.com/split-cube-studios/ardent
 
-go 1.15
+go 1.16
 
 require (
 	github.com/hajimehoshi/ebiten/v2 v2.0.2

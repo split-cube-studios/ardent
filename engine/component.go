@@ -26,8 +26,6 @@ type Component interface {
 	NewRenderer() Renderer
 	NewIsoRenderer() IsoRenderer
 
-	NewTilemap(int, [2][][]int, map[int]Image, TileOverlapEvent) Tilemap
-
 	NewCamera() Camera
 
 	NewCollider() Collider

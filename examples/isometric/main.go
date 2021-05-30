@@ -75,7 +75,7 @@ func main() {
 		3: atlas.GetImage("tree"),
 	}
 
-	tilemap := game.NewTilemap(128, data, mapper, func(bool, engine.Image, interface{}) interface{} {
+	tilemap := engine.NewTilemap(128, data, mapper, func(bool, engine.Image, interface{}) interface{} {
 		return nil
 	})
 	camera := game.NewCamera()

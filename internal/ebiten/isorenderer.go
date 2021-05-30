@@ -9,7 +9,6 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/split-cube-studios/ardent/engine"
-	"github.com/split-cube-studios/ardent/internal/common"
 )
 
 // IsoRenderer is an engine.IsoRenderer.
@@ -18,7 +17,7 @@ type IsoRenderer struct {
 
 	drawQueue []*isoRendererImage
 
-	tilemap         *common.Tilemap
+	tilemap         *engine.Tilemap
 	tileEventStates map[[3]int]tileEventState
 }
 
@@ -45,8 +44,8 @@ func NewIsoRenderer() *IsoRenderer {
 }
 
 // SetTilemap implements engine.IsoRenderer.
-func (r *IsoRenderer) SetTilemap(tilemap engine.Tilemap) {
-	r.tilemap = tilemap.(*common.Tilemap)
+func (r *IsoRenderer) SetTilemap(tilemap *engine.Tilemap) {
+	r.tilemap = tilemap
 	r.tileEventStates = make(map[[3]int]tileEventState)
 }
 
@@ -55,7 +54,7 @@ func (r *IsoRenderer) tilemapToIsoLayers(cx, cy float64) [][]*isoRendererImage {
 		return make([][]*isoRendererImage, 1)
 	}
 
-	tw := r.tilemap.Width
+	tw := r.tilemap.TileWidth
 	data := r.tilemap.Data
 	mapper := r.tilemap.Mapper
 

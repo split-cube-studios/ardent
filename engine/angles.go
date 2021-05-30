@@ -36,7 +36,7 @@ var intervalToCardinal = [8]byte{
 
 // AngleToCardinal convert an angle to a cardinal direction.
 func AngleToCardinal(angle float64) byte {
-	interval := (int(math.Round(angle/(2*math.Pi/8))) + 8) % 8
+	interval := (int(math.Abs(math.Round(angle/(2*math.Pi/8)))) + 8) % 8
 
 	return intervalToCardinal[interval]
 }
