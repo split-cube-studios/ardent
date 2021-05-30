@@ -63,16 +63,10 @@ func NewGenerator(options GeneratorOptions) *Generator {
 	}
 
 	sort.Slice(g.requiredRooms, func(i, j int) bool {
-		if g.requiredRooms[i].Policy().Alignment != nil {
-			return true
-		}
-		return false
+		return g.requiredRooms[i].Policy().Alignment != nil
 	})
 	sort.Slice(g.optionalRooms, func(i, j int) bool {
-		if g.optionalRooms[i].Policy().Alignment != nil {
-			return true
-		}
-		return false
+		return g.optionalRooms[i].Policy().Alignment != nil
 	})
 
 	return g

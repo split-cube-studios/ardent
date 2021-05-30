@@ -8,7 +8,7 @@ import (
 // ContextMap handles context aware
 // steering behaviors for in-game AI.
 type ContextMap struct {
-	arc, dist float64
+	arc       float64
 	cmap, buf []float64
 
 	approachBehavior *ContextMapBehavior
