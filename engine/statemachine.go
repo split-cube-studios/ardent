@@ -24,7 +24,7 @@ func (sm *StateMachine) UpdateState(state uint64, active bool) {
 	if active {
 		sm.state |= state
 	} else {
-		sm.state &= ^state
+		sm.state &^= state
 	}
 }
 
@@ -50,13 +50,13 @@ func (sm *StateMachine) State() uint64 {
 
 // Is indicates whether a given state is active.
 func (sm *StateMachine) Is(state uint64) bool {
-	return sm.state&state > 0
+	return sm.state&state != 0
 }
 
 // IsOnly indicates whether a given state is active,
 // and that it is the only active state.
 func (sm *StateMachine) IsOnly(state uint64) bool {
-	return sm.state & ^state == 0
+	return sm.state&^state == 0
 }
 
 // SetCallback sets a given callback function for a given state.
