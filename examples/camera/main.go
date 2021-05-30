@@ -50,10 +50,7 @@ func main() {
 		// tick function
 		tick,
 		// layout function
-		func(ow, oh int) (int, int) {
-			// preserve virtual res
-			return w, h
-		},
+		engine.LayoutFit(w, h),
 	)
 
 	// create new renderer

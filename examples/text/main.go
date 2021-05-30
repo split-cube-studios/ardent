@@ -19,9 +19,7 @@ func main() {
 		// tick function
 		func() {},
 		// layout function
-		func(ow, oh int) (int, int) {
-			return 854, 480
-		},
+		engine.LayoutFit(854, 450),
 	)
 
 	// create new renderer and text image
