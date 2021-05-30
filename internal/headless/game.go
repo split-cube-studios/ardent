@@ -16,7 +16,7 @@ type Game struct {
 // NewGame returns an instantiated game.
 func NewGame(
 	tickFunc func(),
-	layoutFunc func(int, int) (int, int),
+	layoutFunc engine.LayoutFunc,
 ) *Game {
 	return &Game{
 		tickFunc: tickFunc,
