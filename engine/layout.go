@@ -3,7 +3,7 @@ package engine
 // LayoutFunc is a function type
 // that is responsible for handling
 // screen resizing.
-type LayoutFunc func(int, int) (int, int)
+type LayoutFunc func(w int, h int) (nw int, nh int)
 
 // LayoutFill returns a LayoutFunc that fills the screen
 // without stretching. Scaling is based on an original
