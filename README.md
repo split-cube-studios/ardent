@@ -3,6 +3,8 @@
 
 Ardent is a cross-platform 2D game engine, initially developed for the game Ardent Woods.
 
+Please note that Ardent is currently pre-stable! Breaking changes can happen at any time. Something something WIP.
+
 ## Features
 
 Alongside basic features such as user input and rendering, Ardent offers a few key features:
