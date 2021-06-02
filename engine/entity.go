@@ -22,6 +22,10 @@ type CoreEntity struct {
 	Vec2
 	prevPos Vec2
 
+	// Direction is the current cardinal direction
+	// the entity is facing.
+	Direction byte
+
 	images []Image
 
 	collider Collider
@@ -76,4 +80,12 @@ func (e *CoreEntity) Dispose() {
 // IsDisposed checks if the CoreEntity has been disposed.
 func (e *CoreEntity) IsDisposed() bool {
 	return e.disposed
+}
+
+// MoveTowards moves the CoreEntity in the direction of angle
+// by distance dist. The Direction field is updated with the
+// current closest cardinal direction.
+func (e *CoreEntity) MoveTowards(angle, dist float64) {
+	e.Direction = AngleToCardinal(angle)
+	e.Vec2 = e.Translate(angle, dist)
 }
