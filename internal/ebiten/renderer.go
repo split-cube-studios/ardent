@@ -156,6 +156,11 @@ func (r *Renderer) draw(screen *ebiten.Image) {
 					panic(fmt.Sprintf("Invalid image type %T", img))
 				}
 
+				// typically if an animation frame was not found
+				if eimg == nil {
+					continue
+				}
+
 				op := new(ebiten.DrawImageOptions)
 
 				w, h := eimg.Size()

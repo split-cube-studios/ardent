@@ -221,6 +221,11 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 					panic("Invalid image type")
 				}
 
+				// typically if an animation frame was not found
+				if tmpImage.img.img == nil {
+					continue
+				}
+
 				// tile overlap events
 				less := func(a, b *isoRendererImage) bool {
 					var ty1, ty2 float64

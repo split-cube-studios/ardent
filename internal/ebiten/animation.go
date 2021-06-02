@@ -61,7 +61,7 @@ func (a *Animation) tick() {
 	}
 
 	fps := a.anims[a.state].Fps
-	if a.fpsCounter == 60/fps {
+	if fps != 0 && a.fpsCounter == 60/fps {
 		a.frameCounter++
 		a.fpsCounter = 0
 
