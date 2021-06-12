@@ -4,7 +4,7 @@ import "math"
 
 // Cardinal directions.
 const (
-	N = 1 << iota
+	N CardinalDirection = 1 << iota
 	E
 	S
 	W
@@ -16,6 +16,9 @@ const (
 )
 
 const diag = 3.435 * math.Pi / 180
+
+// CardinalDirection is a type indicating a cardinal direction.
+type CardinalDirection byte
 
 // CardinalToAngle is a map of cardinal directions
 // to angles in dimetric space.
@@ -30,13 +33,14 @@ var CardinalToAngle = [...]float64{
 	NW: math.Pi + math.Pi/6 - diag, // 206.565,
 }
 
-var intervalToCardinal = [8]byte{
+// CardinalDirections is an array of cardinal directions.
+var CardinalDirections = [8]CardinalDirection{
 	E, SE, S, SW, W, NW, N, NE,
 }
 
 // AngleToCardinal convert an angle to a cardinal direction.
-func AngleToCardinal(angle float64) byte {
+func AngleToCardinal(angle float64) CardinalDirection {
 	interval := (int(math.Abs(math.Round(angle/(2*math.Pi/8)))) + 8) % 8
 
-	return intervalToCardinal[interval]
+	return CardinalDirections[interval]
 }

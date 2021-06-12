@@ -24,7 +24,7 @@ type CoreEntity struct {
 
 	// Direction is the current cardinal direction
 	// the entity is facing.
-	Direction byte
+	Direction CardinalDirection
 
 	images []Image
 
