@@ -86,8 +86,6 @@ func (cm *ContextMap) Angle(origin Vec2, excite, inhibit []Vec2) float64 {
 		}
 	}
 
-	cm.normalize(cm.cmap)
-
 	var maxIndex int
 	for i, m := range cm.cmap {
 		if m > cm.cmap[maxIndex] {
