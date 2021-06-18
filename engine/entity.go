@@ -96,7 +96,10 @@ func (e *CoreEntity) MoveTowards(angle, dist, interval float64) {
 
 	if interval != 0 {
 		interval := math.Pi / 32
-		delta := angle - e.lastAngle
+		delta := math.Atan2(
+			math.Sin(angle-e.lastAngle),
+			math.Cos(e.lastAngle-angle),
+		)
 		op := math.Min
 
 		if delta < 0 {
@@ -110,6 +113,12 @@ func (e *CoreEntity) MoveTowards(angle, dist, interval float64) {
 		)
 	} else {
 		e.lastAngle = angle
+	}
+
+	if e.lastAngle < 0 {
+		e.lastAngle += math.Pi * 2
+	} else if e.lastAngle > math.Pi*2 {
+		e.lastAngle -= math.Pi * 2
 	}
 
 	e.Direction = AngleToCardinal(e.lastAngle)
