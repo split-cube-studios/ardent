@@ -86,8 +86,6 @@ func (cm *ContextMap) Angle(origin Vec2, excite, inhibit []Vec2) float64 {
 		}
 	}
 
-	cm.normalize(cm.cmap)
-
 	var maxIndex int
 	for i, m := range cm.cmap {
 		if m > cm.cmap[maxIndex] {
@@ -140,17 +138,5 @@ func (cm *ContextMap) apply(u, v Vec2, inhibit bool, behavior *ContextMapBehavio
 	for i, delta := range cm.buf {
 		cm.cmap[i] += delta
 		cm.buf[i] = 0
-	}
-}
-
-func (cm *ContextMap) normalize(vx []float64) {
-	var max float64
-	for _, v := range vx {
-		if v > max {
-			max = v
-		}
-	}
-	for i, v := range vx {
-		vx[i] = v / max
 	}
 }

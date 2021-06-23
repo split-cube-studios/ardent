@@ -1,5 +1,7 @@
 package engine
 
+import "math"
+
 // Entity is a basic game entity.
 type Entity interface {
 	Tick()
@@ -22,10 +24,16 @@ type CoreEntity struct {
 	Vec2
 	prevPos Vec2
 
+	// Direction is the current cardinal direction
+	// the entity is facing.
+	Direction CardinalDirection
+
 	images []Image
 
 	collider Collider
 	disposed bool
+
+	lastAngle float64
 }
 
 // Tick updates the CoreEntity's position.
@@ -76,4 +84,43 @@ func (e *CoreEntity) Dispose() {
 // IsDisposed checks if the CoreEntity has been disposed.
 func (e *CoreEntity) IsDisposed() bool {
 	return e.disposed
+}
+
+// MoveTowards moves the CoreEntity in the direction of angle
+// by distance dist. The change in angle between MoveTowards
+// calls is limited to a delta of the interval argument.
+// An interval of 0 can be provided for no delta limit.
+// The Direction field is updated with the
+// current closest cardinal direction.
+func (e *CoreEntity) MoveTowards(angle, dist, interval float64) {
+
+	if interval != 0 {
+		interval := math.Pi / 32
+		delta := math.Atan2(
+			math.Sin(angle-e.lastAngle),
+			math.Cos(e.lastAngle-angle),
+		)
+		op := math.Min
+
+		if delta < 0 {
+			interval = -interval
+			op = math.Max
+		}
+
+		e.lastAngle += op(
+			interval,
+			delta,
+		)
+	} else {
+		e.lastAngle = angle
+	}
+
+	if e.lastAngle < 0 {
+		e.lastAngle += math.Pi * 2
+	} else if e.lastAngle > math.Pi*2 {
+		e.lastAngle -= math.Pi * 2
+	}
+
+	e.Direction = AngleToCardinal(e.lastAngle)
+	e.Vec2 = e.Translate(e.lastAngle, dist)
 }

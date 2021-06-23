@@ -182,7 +182,7 @@ func (b *BodyPart) Translate(x, y int) {
 
 type Snake struct {
 	game      *SnakeGame
-	Direction int
+	Direction engine.CardinalDirection
 
 	Head *BodyPart
 	End  *BodyPart
