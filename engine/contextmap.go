@@ -140,15 +140,3 @@ func (cm *ContextMap) apply(u, v Vec2, inhibit bool, behavior *ContextMapBehavio
 		cm.buf[i] = 0
 	}
 }
-
-func (cm *ContextMap) normalize(vx []float64) {
-	var max float64
-	for _, v := range vx {
-		if v > max {
-			max = v
-		}
-	}
-	for i, v := range vx {
-		vx[i] = v / max
-	}
-}
