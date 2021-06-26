@@ -57,7 +57,7 @@ func main() {
 	renderer := game.NewRenderer()
 
 	// create new camera
-	camera = new(camera)
+	camera = new(engine.Camera)
 
 	// create new atlas from asset file
 	assetutil.CreateAssets("./examples/atlas")
