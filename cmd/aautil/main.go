@@ -1,18 +1,18 @@
 package main
 
 import (
-	"flag"
+	"os"
 
 	"github.com/split-cube-studios/ardent/aautil"
 )
 
-var dir string
-
-func init() {
-	flag.StringVar(&dir, "d", "assets/", "Asset directory")
-	flag.Parse()
-}
-
 func main() {
-	aautil.CreateAssets(dir)
+
+	if len(os.Args) > 1 {
+		for i := 1; i < len(os.Args); i++ {
+			aautil.CreateAssets(os.Args[i])
+		}
+	} else {
+		aautil.CreateAssets("./")
+	}
 }
