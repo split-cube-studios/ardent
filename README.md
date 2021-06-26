@@ -16,6 +16,17 @@ Alongside basic features such as user input and rendering, Ardent offers a few k
 - Context based steering algorithm
 - And much more!
 
+## Assets
+
+Ardent provides its own asset file format. This allows asset files to indicate information about animations,
+image atlases, sound effect variants, and more.
+
+A tool called `aautil` (ardent asset utility) is provided to create asset files.
+
+To install `aautil`, run `go install ./cmd/aautil`.
+
+`aautil` can take one or more paths as arguments for asset file folder locations. YAML files are used for configuration. Checkout some of the examples for samples of configuration files.
+
 ## Discord
 
 Come chat with us in the `#ardent` channel on [Discord](https://discord.gg/dUqS7RfSqv)!
