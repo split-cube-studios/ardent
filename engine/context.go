@@ -8,7 +8,7 @@ import (
 // Context is a rendering context.
 type Context struct {
 	Renderer
-	Collider
+	*Collider
 	*Tilemap
 
 	partitionMap *PartitionMap
@@ -17,7 +17,7 @@ type Context struct {
 }
 
 // NewContext creates a Context with the given Renderer and Collider.
-func NewContext(renderer Renderer, collider Collider, tilemap *Tilemap) *Context {
+func NewContext(renderer Renderer, collider *Collider, tilemap *Tilemap) *Context {
 	ctx := &Context{
 		Renderer: renderer,
 		Collider: collider,

@@ -13,7 +13,6 @@ type Component interface {
 	ImageComponent
 	SoundComponent
 	RendererComponent
-	PhysicsComponent
 }
 
 // AssetComponent produces asset components.
@@ -42,9 +41,4 @@ type SoundComponent interface {
 type RendererComponent interface {
 	NewRenderer() Renderer
 	NewIsoRenderer() IsoRenderer
-}
-
-// PhysicsComponent produces physics components.
-type PhysicsComponent interface {
-	NewCollider() Collider
 }
