@@ -17,7 +17,7 @@ func (r Renderer) AddImage(images ...engine.Image) {
 }
 
 // SetCamera implements engine.Renderer.
-func (r Renderer) SetCamera(camera engine.Camera) {
+func (r Renderer) SetCamera(camera *engine.Camera) {
 }
 
 // ScreenToWorld implements engine.Renderer.
