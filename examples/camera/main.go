@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/split-cube-studios/ardent"
-	"github.com/split-cube-studios/ardent/assetutil"
+	"github.com/split-cube-studios/ardent/aautil"
 	"github.com/split-cube-studios/ardent/engine"
 )
 
@@ -60,7 +60,7 @@ func main() {
 	camera = new(engine.Camera)
 
 	// create new atlas from asset file
-	assetutil.CreateAssets("./examples/atlas")
+	aautil.CreateAssets("./examples/atlas")
 
 	atlas, _ := game.NewAtlasFromAssetPath("./examples/atlas/atlas.asset")
 

@@ -1,4 +1,4 @@
-package assetutil
+package aautil
 
 import (
 	"fmt"

@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 
-	"github.com/split-cube-studios/ardent/assetutil"
+	"github.com/split-cube-studios/ardent/aautil"
 )
 
 var dir string
@@ -14,5 +14,5 @@ func init() {
 }
 
 func main() {
-	assetutil.CreateAssets(dir)
+	aautil.CreateAssets(dir)
 }
