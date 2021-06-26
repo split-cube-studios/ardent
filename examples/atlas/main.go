@@ -5,7 +5,7 @@ import (
 	"math"
 
 	"github.com/split-cube-studios/ardent"
-	"github.com/split-cube-studios/ardent/assetutil"
+	"github.com/split-cube-studios/ardent/aautil"
 	"github.com/split-cube-studios/ardent/engine"
 )
 
@@ -26,7 +26,7 @@ func main() {
 	renderer := game.NewRenderer()
 
 	// create new atlas from asset file
-	assetutil.CreateAssets("./examples/atlas")
+	aautil.CreateAssets("./examples/atlas")
 
 	atlas, err := game.NewAtlasFromAssetPath("./examples/atlas/atlas.asset")
 	if err != nil {

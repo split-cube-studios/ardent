@@ -1,5 +1,5 @@
-// Package assetutil contains utilities for generating, parsing, and managing assets.
-package assetutil
+// Package aautil contains utilities for generating, parsing, and managing assets.
+package aautil
 
 import (
 	"io/ioutil"

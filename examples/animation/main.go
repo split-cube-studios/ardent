@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/split-cube-studios/ardent"
-	"github.com/split-cube-studios/ardent/assetutil"
+	"github.com/split-cube-studios/ardent/aautil"
 	"github.com/split-cube-studios/ardent/engine"
 )
 
@@ -37,7 +37,7 @@ func main() {
 	// create new renderer and animation
 	renderer := game.NewRenderer()
 
-	assetutil.CreateAssets("./examples/animation")
+	aautil.CreateAssets("./examples/animation")
 
 	animation, err := game.NewAnimationFromAssetPath("./examples/animation/animation.asset")
 	if err != nil {

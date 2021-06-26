@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/split-cube-studios/ardent"
-	"github.com/split-cube-studios/ardent/assetutil"
+	"github.com/split-cube-studios/ardent/aautil"
 	"github.com/split-cube-studios/ardent/engine"
 	"golang.org/x/image/font/basicfont"
 )
@@ -54,7 +54,7 @@ func main() {
 		},
 	)
 
-	assetutil.CreateAssets("./")
+	aautil.CreateAssets("./")
 
 	sound, _ = game.NewSoundFromAssetPath("sample.asset")
 

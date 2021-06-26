@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/split-cube-studios/ardent"
-	"github.com/split-cube-studios/ardent/assetutil"
+	"github.com/split-cube-studios/ardent/aautil"
 	"github.com/split-cube-studios/ardent/engine"
 )
 
@@ -24,7 +24,7 @@ func main() {
 	// create new renderer and image
 	renderer := game.NewRenderer()
 
-	assetutil.CreateAssets("./examples/image")
+	aautil.CreateAssets("./examples/image")
 
 	image, _ := game.NewImageFromAssetPath("./examples/image/scs.asset")
 

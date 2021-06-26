@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/split-cube-studios/ardent"
-	"github.com/split-cube-studios/ardent/assetutil"
+	"github.com/split-cube-studios/ardent/aautil"
 	"github.com/split-cube-studios/ardent/engine"
 )
 
@@ -46,7 +46,7 @@ func main() {
 		engine.LayoutFit(w, h),
 	)
 
-	assetutil.CreateAssets("./examples/isometric")
+	aautil.CreateAssets("./examples/isometric")
 
 	atlas, _ := game.NewAtlasFromAssetPath("./examples/isometric/tiles.asset")
 
