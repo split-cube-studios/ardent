@@ -10,7 +10,7 @@ import (
 
 var (
 	game                      engine.Game
-	camera                    engine.Camera
+	camera                    *engine.Camera
 	stripes                   engine.Image
 	x, y                      float64
 	stripeWidth, stripeHeight int
@@ -57,7 +57,7 @@ func main() {
 	renderer := game.NewRenderer()
 
 	// create new camera
-	camera = game.NewCamera()
+	camera = new(engine.Camera)
 
 	// create new atlas from asset file
 	assetutil.CreateAssets("./examples/atlas")

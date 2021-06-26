@@ -8,7 +8,7 @@ type Renderer interface {
 	// Images are drawn in the order they are added.
 	AddImage(...Image)
 
-	SetCamera(Camera)
+	SetCamera(*Camera)
 
 	ScreenToWorld(Vec2) Vec2
 

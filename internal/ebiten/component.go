@@ -16,7 +16,6 @@ import (
 	"golang.org/x/image/font"
 
 	"github.com/split-cube-studios/ardent/engine"
-	"github.com/split-cube-studios/ardent/internal/common"
 )
 
 type component struct {
@@ -145,12 +144,4 @@ func (c *component) NewRenderer() engine.Renderer {
 
 func (c *component) NewIsoRenderer() engine.IsoRenderer {
 	return NewIsoRenderer()
-}
-
-func (c *component) NewCamera() engine.Camera {
-	return new(common.Camera)
-}
-
-func (c *component) NewCollider() engine.Collider {
-	return new(common.Collider)
 }

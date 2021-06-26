@@ -76,7 +76,7 @@ func main() {
 	tilemap := engine.NewTilemap(128, data, mapper, func(bool, engine.Image, interface{}) interface{} {
 		return nil
 	})
-	camera := game.NewCamera()
+	camera := new(engine.Camera)
 	animation, _ = game.NewAnimationFromAssetPath("./examples/animation/animation.asset")
 	animation.SetState("sw")
 

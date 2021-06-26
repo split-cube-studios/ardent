@@ -14,7 +14,7 @@ import (
 
 // Renderer is a simple ebiten renderer.
 type Renderer struct {
-	camera engine.Camera
+	camera *engine.Camera
 
 	partitionMap *engine.PartitionMap
 
@@ -38,7 +38,7 @@ func (r *Renderer) AddImage(images ...engine.Image) {
 }
 
 // SetCamera implements engine.Renderer.
-func (r *Renderer) SetCamera(camera engine.Camera) {
+func (r *Renderer) SetCamera(camera *engine.Camera) {
 	r.camera = camera
 }
 

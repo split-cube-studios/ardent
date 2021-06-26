@@ -7,7 +7,6 @@ import (
 	"image/color"
 
 	"github.com/split-cube-studios/ardent/engine"
-	"github.com/split-cube-studios/ardent/internal/common"
 	"golang.org/x/image/font"
 )
 
@@ -51,12 +50,4 @@ func (c component) NewRenderer() engine.Renderer {
 
 func (c component) NewIsoRenderer() engine.IsoRenderer {
 	return new(IsoRenderer)
-}
-
-func (c component) NewCamera() engine.Camera {
-	return new(common.Camera)
-}
-
-func (c component) NewCollider() engine.Collider {
-	return new(common.Collider)
 }

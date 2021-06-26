@@ -6,7 +6,7 @@ import "math"
 type Entity interface {
 	Tick()
 
-	SetCollider(Collider)
+	SetCollider(*Collider)
 
 	Position() Vec2
 
@@ -30,7 +30,7 @@ type CoreEntity struct {
 
 	images []Image
 
-	collider Collider
+	collider *Collider
 	disposed bool
 
 	lastAngle float64
@@ -50,7 +50,7 @@ func (e *CoreEntity) Tick() {
 }
 
 // SetCollider sets the CoreEntity's Collider.
-func (e *CoreEntity) SetCollider(collider Collider) {
+func (e *CoreEntity) SetCollider(collider *Collider) {
 	e.collider = collider
 }
 
