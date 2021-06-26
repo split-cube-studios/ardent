@@ -147,10 +147,6 @@ func (c *component) NewIsoRenderer() engine.IsoRenderer {
 	return NewIsoRenderer()
 }
 
-func (c *component) NewCamera() engine.Camera {
-	return new(common.Camera)
-}
-
 func (c *component) NewCollider() engine.Collider {
 	return new(common.Collider)
 }

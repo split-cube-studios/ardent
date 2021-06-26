@@ -53,10 +53,6 @@ func (c component) NewIsoRenderer() engine.IsoRenderer {
 	return new(IsoRenderer)
 }
 
-func (c component) NewCamera() engine.Camera {
-	return new(common.Camera)
-}
-
 func (c component) NewCollider() engine.Collider {
 	return new(common.Collider)
 }

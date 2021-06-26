@@ -7,13 +7,12 @@ import (
 	"golang.org/x/image/font"
 )
 
-// Component produces engine components.
+// Component produces backend dependent components.
 type Component interface {
 	AssetComponent
 	ImageComponent
 	SoundComponent
 	RendererComponent
-	CameraComponent
 	PhysicsComponent
 }
 
@@ -43,11 +42,6 @@ type SoundComponent interface {
 type RendererComponent interface {
 	NewRenderer() Renderer
 	NewIsoRenderer() IsoRenderer
-}
-
-// CameraComponent produces camera components.
-type CameraComponent interface {
-	NewCamera() Camera
 }
 
 // PhysicsComponent produces physics components.
