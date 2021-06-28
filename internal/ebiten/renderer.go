@@ -111,7 +111,9 @@ func (r *Renderer) drawImageAndLayers(
 
 	eimg, op := engineToEbitenImage(img)
 
-	op.GeoM.Concat(parentOp.GeoM)
+	if parentOp != nil {
+		op.GeoM.Concat(parentOp.GeoM)
+	}
 
 	screen.DrawImage(eimg, op)
 
@@ -145,21 +147,22 @@ func engineImageToLocalImage(img engine.Image) *Image {
 	case *Animation:
 		a.tick()
 		props = &Image{
-			img:        a.getFrame(),
-			tx:         a.tx,
-			ty:         a.ty,
-			ox:         a.ox,
-			oy:         a.oy,
-			sx:         a.sx,
-			sy:         a.sy,
-			originX:    a.originX,
-			originY:    a.originY,
-			d:          a.d,
-			r:          a.r,
-			g:          a.g,
-			b:          a.b,
-			alpha:      a.alpha,
-			renderable: a.renderable,
+			img:                  a.getFrame(),
+			tx:                   a.tx,
+			ty:                   a.ty,
+			ox:                   a.ox,
+			oy:                   a.oy,
+			sx:                   a.sx,
+			sy:                   a.sy,
+			originX:              a.originX,
+			originY:              a.originY,
+			d:                    a.d,
+			r:                    a.r,
+			g:                    a.g,
+			b:                    a.b,
+			alpha:                a.alpha,
+			renderable:           a.renderable,
+			triggersOverlapEvent: a.triggersOverlapEvent,
 		}
 
 	default:

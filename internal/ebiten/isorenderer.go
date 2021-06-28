@@ -182,7 +182,7 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 					if a.isTile {
 						ty1 = img.ty + float64(h-a.tileHeight/8)
 					} else {
-						ty1 = img.ty + float64(h)
+						ty1 = img.ty + float64(h) - img.originY*float64(h)
 					}
 
 					img = b.img
@@ -191,7 +191,7 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 					if b.isTile {
 						ty2 = img.ty + float64(h-b.tileHeight/8)
 					} else {
-						ty2 = img.ty + float64(h)
+						ty2 = img.ty + float64(h) - img.originY*float64(h)
 					}
 
 					return ty1 < ty2
@@ -203,9 +203,9 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 							continue
 						}
 
-						ax := int(tmpImage.img.tx + tmpImage.img.ox)
-						ay := int(tmpImage.img.ty + tmpImage.img.oy)
 						aw, ah := tmpImage.img.Size()
+						ax := int(tmpImage.img.tx + tmpImage.img.ox - tmpImage.img.originX*float64(aw))
+						ay := int(tmpImage.img.ty + tmpImage.img.oy - tmpImage.img.originY*float64(ah))
 
 						bx, by := int(tile.img.tx), int(tile.img.ty)
 						bw, bh := tile.img.Size()
