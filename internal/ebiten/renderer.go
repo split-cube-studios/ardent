@@ -67,43 +67,11 @@ func (r *Renderer) ScreenToWorld(screen engine.Vec2) engine.Vec2 {
 }
 
 // Tick implements engine.Renderer.
-func (r *Renderer) Tick() {
-	/*
-		var i int
-		for _, img := range r.imgs {
-			if img.IsDisposed() {
-				continue
-			}
-
-			anim, ok := img.(*Animation)
-			if ok {
-				anim.tick()
-			}
-
-			r.imgs[i] = img
-			i++
-		}
-
-		for j := i; j < len(r.imgs); j++ {
-			r.imgs[j] = nil
-		}
-		r.imgs = r.imgs[:i]
-	*/
-}
+func (r *Renderer) Tick() {}
 
 // draw renders all images in the draw stack.
 func (r *Renderer) draw(screen *ebiten.Image) {
-	var (
-		eimg             *ebiten.Image
-		tx, ty           float64
-		ox, oy           float64
-		originX, originY float64
-		sx, sy           float64
-		d                float64
-		cx, cy           float64
-		red, green, blue float64
-		alpha            float64
-	)
+	var cx, cy float64
 
 	if r.camera != nil {
 		cx, cy = r.camera.Position()
@@ -124,64 +92,32 @@ func (r *Renderer) draw(screen *ebiten.Image) {
 			})
 
 			for _, entry := range entries {
-				img := entry.(engine.Image)
-
-				if !img.IsRenderable() {
-					return
-				}
-
-				switch a := img.(type) {
-				case *Image:
-					eimg = a.img
-					tx, ty = a.tx+a.ox, a.ty+a.oy
-					ox, oy = a.ox, a.oy
-					sx, sy = a.sx, a.sy
-					originX, originY = a.originX, a.originY
-					d = a.d
-					red, green, blue = a.r, a.g, a.b
-					alpha = a.alpha
-
-				case *Animation:
-					a.tick()
-					eimg = a.getFrame()
-					tx, ty = a.tx+a.ox, a.ty+a.oy
-					ox, oy = a.ox, a.oy
-					sx, sy = a.sx, a.sy
-					originX, originY = a.originX, a.originY
-					d = a.d
-					red, green, blue = a.r, a.g, a.b
-					alpha = a.alpha
-
-				default:
-					panic(fmt.Sprintf("Invalid image type %T", img))
-				}
-
-				// typically if an animation frame was not found
-				if eimg == nil {
-					continue
-				}
-
 				op := new(ebiten.DrawImageOptions)
-
-				w, h := eimg.Size()
-
-				op.GeoM.Scale(sx, sy)
-				op.GeoM.Translate(
-					-originX*float64(w),
-					-originY*float64(h),
-				)
-				op.GeoM.Rotate(d)
-				x, y := tx+ox, ty+oy
-				op.GeoM.Translate(
-					x-cx,
-					y-cy,
-				)
-
-				op.ColorM.Scale(red, green, blue, alpha)
-
-				screen.DrawImage(eimg, op)
+				op.GeoM.Translate(math.Round(-cx), math.Round(-cy))
+				r.drawImageAndLayers(entry.(engine.Image), screen, op)
 			}
 		})
+}
+
+func (r *Renderer) drawImageAndLayers(
+	img engine.Image,
+	screen *ebiten.Image,
+	parentOp *ebiten.DrawImageOptions,
+) {
+
+	if !img.IsRenderable() {
+		return
+	}
+
+	eimg, op := engineToEbitenImage(img)
+
+	op.GeoM.Concat(parentOp.GeoM)
+
+	screen.DrawImage(eimg, op)
+
+	for _, layer := range img.Layers() {
+		r.drawImageAndLayers(layer, screen, op)
+	}
 }
 
 // SetViewport implements engine.Renderer.
@@ -197,4 +133,65 @@ func (r *Renderer) Viewport() image.Rectangle {
 	}
 
 	return image.Rect(int(cx), int(cy), r.w+int(cx), r.h+int(cy))
+}
+
+func engineImageToLocalImage(img engine.Image) *Image {
+
+	var props *Image
+
+	switch a := img.(type) {
+	case *Image:
+		props = a
+	case *Animation:
+		a.tick()
+		props = &Image{
+			img:        a.getFrame(),
+			tx:         a.tx,
+			ty:         a.ty,
+			ox:         a.ox,
+			oy:         a.oy,
+			sx:         a.sx,
+			sy:         a.sy,
+			originX:    a.originX,
+			originY:    a.originY,
+			d:          a.d,
+			r:          a.r,
+			g:          a.g,
+			b:          a.b,
+			alpha:      a.alpha,
+			renderable: a.renderable,
+		}
+
+	default:
+		panic(fmt.Sprintf("Invalid image type %T", img))
+	}
+
+	return props
+}
+
+func engineToEbitenImage(img engine.Image) (*ebiten.Image, *ebiten.DrawImageOptions) {
+
+	props := engineImageToLocalImage(img)
+
+	// typically if an animation frame was not found
+	if props.img == nil {
+		return nil, nil
+	}
+
+	op := new(ebiten.DrawImageOptions)
+
+	w, h := props.img.Size()
+
+	op.GeoM.Scale(props.sx, props.sy)
+	op.GeoM.Translate(
+		-props.originX*float64(w),
+		-props.originY*float64(h),
+	)
+	op.GeoM.Rotate(props.d)
+	x, y := props.tx+props.ox, props.ty+props.oy
+	op.GeoM.Translate(x, y)
+
+	op.ColorM.Scale(props.r, props.g, props.b, props.alpha)
+
+	return props.img, op
 }

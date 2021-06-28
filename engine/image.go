@@ -28,16 +28,14 @@ type Image interface {
 	// Alpha sets the image's alpha channel with a range of 0.0 to 1.0
 	Alpha(float64)
 
+	// Layers returns all layers of an image, excluding the root layer.
+	Layers() []Image
+
 	// SetRenderable sets whether or not an image should be rendered.
 	SetRenderable(bool)
 
 	// IsRenderable indicates whether or not an image should be rendered.
 	IsRenderable() bool
-
-	// RoundTranslations sets the rounding state for image translations.
-	// If set to true, image translations are rounded to the nearest integer.
-	// Defaults to true.
-	RoundTranslations(bool)
 
 	// TriggersTileOverlapEvent determines whether tile overlap events will occur.
 	// A tile overlap is when an image is behind a tile in the isometric renderer.

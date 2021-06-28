@@ -80,7 +80,7 @@ var toEbitenKey = map[int]ebiten.Key{
 	engine.KeyKP7:          ebiten.KeyKP7,
 	engine.KeyKP8:          ebiten.KeyKP8,
 	engine.KeyKP9:          ebiten.KeyKP9,
-	engine.KeyKPAdd:        ebiten.KeyKPAdd,
+	engine.KeyKPAdd:        ebiten.KeyNumpadAdd,
 	engine.KeyKPDecimal:    ebiten.KeyKPDecimal,
 	engine.KeyKPDivide:     ebiten.KeyKPDivide,
 	engine.KeyKPEnter:      ebiten.KeyKPEnter,

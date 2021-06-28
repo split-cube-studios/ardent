@@ -32,6 +32,10 @@ func (c component) NewTextImage(text string, w, h int, face font.Face, clr color
 	return new(Image)
 }
 
+func (c Component) NewImageFromLayers(layers ...engine.Image) engine.Image {
+	return new(Image)
+}
+
 func (c component) NewAtlasFromAssetPath(path string) (engine.Atlas, error) {
 	return new(Atlas), nil
 }

@@ -11,6 +11,8 @@ import (
 type Image struct {
 	img *ebiten.Image
 
+	layers []engine.Image
+
 	tx, ty float64
 	ox, oy float64
 	sx, sy float64
@@ -24,7 +26,6 @@ type Image struct {
 	z int
 
 	renderable           bool
-	roundTranslations    bool
 	triggersOverlapEvent bool
 	disposed             bool
 }
@@ -69,6 +70,11 @@ func (i *Image) Alpha(alpha float64) {
 	i.alpha = alpha
 }
 
+// Layers returns the image layers.
+func (i *Image) Layers() []engine.Image {
+	return i.layers
+}
+
 // SetRenderable sets the render state of the image.
 func (i *Image) SetRenderable(r bool) {
 	i.renderable = r
@@ -82,12 +88,6 @@ func (i *Image) IsRenderable() bool {
 // Size returns the image size.
 func (i *Image) Size() (int, int) {
 	return i.img.Size()
-}
-
-// RoundTranslations sets whether or not
-// image translations will be rounded during rendering.
-func (i *Image) RoundTranslations(round bool) {
-	i.roundTranslations = round
 }
 
 // TriggersTileOverlapEvent determines whether or not

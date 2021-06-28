@@ -10,6 +10,12 @@ import (
 )
 
 func main() {
+
+	var (
+		layerImage engine.Image
+		angle      float64
+	)
+
 	// create new game instance
 	game := ardent.NewGame(
 		"Atlas",
@@ -17,7 +23,10 @@ func main() {
 		480,
 		engine.FlagResizable,
 		// tick function
-		func() {},
+		func() {
+			layerImage.Rotate(angle)
+			angle += 0.01
+		},
 		// layout function
 		nil,
 	)
@@ -40,12 +49,18 @@ func main() {
 
 	// set image positions
 	stripes.Rotate(math.Pi / 3)
-	swirls.Translate(128, 0)
+	stripes.Translate(854/2, 480/2)
+
+	// stripes will be the base layer, so everything is relative to its properties
+	swirls.Translate(128, 128)
+	swirls.Rotate(math.Pi / 5)
 	blocks.Translate(128, 128)
 	blocks.Scale(0.5, 2)
 
+	layerImage = game.NewImageFromLayers(stripes, swirls, blocks)
+
 	// add images to renderer
-	renderer.AddImage(stripes, swirls, blocks)
+	renderer.AddImage(layerImage)
 
 	// add renderer to game and start game
 	game.AddRenderer(renderer)

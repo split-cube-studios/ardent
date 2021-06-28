@@ -47,15 +47,14 @@ func (a *Asset) UnmarshalBinary(data []byte) error {
 	switch ca.Type {
 	case common.AssetTypeImage:
 		a.img = Image{
-			img:               ebiten.NewImageFromImage(ca.Img),
-			sx:                1,
-			sy:                1,
-			r:                 1,
-			g:                 1,
-			b:                 1,
-			alpha:             1,
-			renderable:        true,
-			roundTranslations: true,
+			img:        ebiten.NewImageFromImage(ca.Img),
+			sx:         1,
+			sy:         1,
+			r:          1,
+			g:          1,
+			b:          1,
+			alpha:      1,
+			renderable: true,
 		}
 
 	case common.AssetTypeAtlas:
@@ -68,15 +67,14 @@ func (a *Asset) UnmarshalBinary(data []byte) error {
 	case common.AssetTypeAnimation:
 		a.animation = Animation{
 			Image: Image{
-				img:               ebiten.NewImageFromImage(ca.Img),
-				sx:                1,
-				sy:                1,
-				r:                 1,
-				g:                 1,
-				b:                 1,
-				alpha:             1,
-				renderable:        true,
-				roundTranslations: true,
+				img:        ebiten.NewImageFromImage(ca.Img),
+				sx:         1,
+				sy:         1,
+				r:          1,
+				g:          1,
+				b:          1,
+				alpha:      1,
+				renderable: true,
 			},
 			w:     ca.AnimWidth,
 			h:     ca.AnimHeight,

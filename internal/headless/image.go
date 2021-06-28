@@ -34,6 +34,9 @@ func (i Image) SetZDepth(z int) {}
 // Tint implements engine.Image.
 func (i Image) Tint(r, g, b float64) {}
 
+// Layers implements engine.Image.
+func (i Image) Layers() []engine.Image {}
+
 // SetRenderable implements engine.Image.
 func (i Image) SetRenderable(r bool) {}
 
@@ -44,9 +47,6 @@ func (i Image) IsRenderable() bool {
 
 // Alpha implements engine.Image.
 func (i Image) Alpha(alpha float64) {}
-
-// RoundTranslations implements engine.Image.
-func (i Image) RoundTranslations(round bool) {}
 
 // TriggersTileOverlapEvent implements engine.Image.
 func (i Image) TriggersTileOverlapEvent(triggers bool) {}

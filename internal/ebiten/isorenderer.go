@@ -163,62 +163,8 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 					continue
 				}
 
-				var tmpImage *isoRendererImage
-
-				switch a := img.(type) {
-				case *Image:
-					w, h := a.Size()
-					tmpImage = &isoRendererImage{
-						img: &Image{
-							img:                  a.img,
-							tx:                   a.tx - a.originX*float64(w),
-							ty:                   a.ty - a.originY*float64(h),
-							ox:                   a.ox,
-							oy:                   a.oy,
-							sx:                   a.sx,
-							sy:                   a.sy,
-							originX:              a.originX,
-							originY:              a.originY,
-							d:                    a.d,
-							z:                    a.z,
-							r:                    a.r,
-							g:                    a.g,
-							b:                    a.b,
-							alpha:                a.alpha,
-							renderable:           a.renderable,
-							roundTranslations:    a.roundTranslations,
-							triggersOverlapEvent: a.triggersOverlapEvent,
-						},
-					}
-
-				case *Animation:
-					a.tick()
-					w, h := a.Size()
-					tmpImage = &isoRendererImage{
-						img: &Image{
-							img:                  a.getFrame(),
-							tx:                   a.tx - a.originX*float64(w),
-							ty:                   a.ty - a.originY*float64(h),
-							ox:                   a.ox,
-							oy:                   a.oy,
-							sx:                   a.sx,
-							sy:                   a.sy,
-							originX:              a.originX,
-							originY:              a.originY,
-							d:                    a.d,
-							z:                    a.z,
-							r:                    a.r,
-							g:                    a.g,
-							b:                    a.b,
-							alpha:                a.alpha,
-							renderable:           a.renderable,
-							roundTranslations:    a.roundTranslations,
-							triggersOverlapEvent: a.triggersOverlapEvent,
-						},
-					}
-
-				default:
-					panic("Invalid image type")
+				tmpImage := &isoRendererImage{
+					img: engineImageToLocalImage(img),
 				}
 
 				// typically if an animation frame was not found
@@ -332,32 +278,9 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 				img := isoImage.img
 
 				op := new(ebiten.DrawImageOptions)
-				w, h := img.Size()
+				op.GeoM.Translate(math.Round(-cx), math.Round(-cy))
 
-				op.GeoM.Scale(img.sx, img.sy)
-				op.GeoM.Translate(
-					-img.originX*float64(w),
-					-img.originY*float64(h),
-				)
-				op.GeoM.Rotate(img.d)
-				op.GeoM.Translate(
-					img.originX*float64(w),
-					img.originY*float64(h),
-				)
-
-				x, y := img.tx+img.ox, img.ty+img.oy
-				if img.roundTranslations {
-					x, y = math.Round(x), math.Round(y)
-				}
-
-				op.GeoM.Translate(
-					x-cx,
-					y-cy,
-				)
-
-				op.ColorM.Scale(img.r, img.g, img.b, img.alpha)
-
-				screen.DrawImage(img.img, op)
+				r.drawImageAndLayers(img, screen, op)
 			}
 
 			r.drawQueue = r.drawQueue[:0]
