@@ -28,7 +28,11 @@ func (c component) NewImageFromImage(img image.Image) engine.Image {
 	return new(Image)
 }
 
-func (c component) NewTextImage(text string, w, h int, face font.Face, clr color.Color) engine.Image {
+func (c component) NewTextImage(text string, face font.Face, clr color.Color) engine.Image {
+	return new(Image)
+}
+
+func (c Component) NewImageFromLayers(layers ...engine.Image) engine.Image {
 	return new(Image)
 }
 

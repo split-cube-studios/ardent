@@ -24,12 +24,29 @@ type AssetComponent interface {
 
 // ImageComponent produces image components.
 type ImageComponent interface {
+	// NewImageFromPath returns an image from an image file path.
 	NewImageFromPath(string) (Image, error)
+
+	// NewImageFromAssetPath returns an image from an asset file path.
 	NewImageFromAssetPath(string) (Image, error)
+
+	// NewImageFromImage returns an image from an image.Image.
 	NewImageFromImage(image.Image) Image
-	NewTextImage(string, int, int, font.Face, color.Color) Image
+
+	// NewTextImage returns an image containing text.
+	NewTextImage(text string, face font.Face, c color.Color) Image
+
+	// NewImageFromLayers merges image layers on in order and returns a new image.
+	NewImageFromLayers(...Image) Image
+
+	// NewAtlasFromAssetPath returns an image atlas from an asset file path.
 	NewAtlasFromAssetPath(string) (Atlas, error)
+
+	// NewAnimationFromAssetPath returns an animation from an asset file path.
 	NewAnimationFromAssetPath(string) (Animation, error)
+
+	// NewScalableImageFromAssetPath returns a scalable image from an asset file path.
+	NewScalableImageFromAssetPath(string) (ScalableImage, error)
 }
 
 // SoundComponent produces sound components.

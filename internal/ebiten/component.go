@@ -76,33 +76,56 @@ func (c *component) NewImageFromAssetPath(path string) (engine.Image, error) {
 
 func (c *component) NewImageFromImage(img image.Image) engine.Image {
 	return &Image{
-		img:               ebiten.NewImageFromImage(img),
-		sx:                1,
-		sy:                1,
-		alpha:             1,
-		r:                 1,
-		g:                 1,
-		b:                 1,
-		renderable:        true,
-		roundTranslations: true,
+		img:        ebiten.NewImageFromImage(img),
+		sx:         1,
+		sy:         1,
+		alpha:      1,
+		r:          1,
+		g:          1,
+		b:          1,
+		renderable: true,
 	}
 }
 
-func (c *component) NewTextImage(txt string, w, h int, face font.Face, clr color.Color) engine.Image {
-	img := ebiten.NewImage(w, h)
+func (c *component) NewTextImage(txt string, face font.Face, clr color.Color) engine.Image {
+	r := text.BoundString(face, txt)
+	img := ebiten.NewImage(r.Dx(), r.Dy()+face.Metrics().Height.Round()/2)
+	img.Fill(color.White)
 	text.Draw(img, txt, face, 0, face.Metrics().Height.Round(), clr)
 
 	return &Image{
-		img:               img,
-		sx:                1,
-		sy:                1,
-		r:                 1,
-		g:                 1,
-		b:                 1,
-		alpha:             1,
-		renderable:        true,
-		roundTranslations: true,
+		img:        img,
+		sx:         1,
+		sy:         1,
+		r:          1,
+		g:          1,
+		b:          1,
+		alpha:      1,
+		renderable: true,
 	}
+}
+
+func (c *component) NewImageFromLayers(layers ...engine.Image) engine.Image {
+
+	var baseImg *Image
+
+	for _, layer := range layers {
+
+		if !layer.IsRenderable() {
+			continue
+		}
+
+		img := engineImageToLocalImage(layer)
+
+		if baseImg == nil {
+			baseImg = img
+			continue
+		}
+
+		baseImg.layers = append(baseImg.layers, layer)
+	}
+
+	return baseImg
 }
 
 func (c *component) NewAtlasFromAssetPath(path string) (engine.Atlas, error) {
@@ -121,6 +144,15 @@ func (c *component) NewAnimationFromAssetPath(path string) (engine.Animation, er
 	}
 
 	return a.ToAnimation(), nil
+}
+
+func (c *component) NewScalableImageFromAssetPath(path string) (engine.ScalableImage, error) {
+	a, err := c.NewAssetFromPath(path)
+	if err != nil {
+		return nil, err
+	}
+
+	return a.ToScalableImage(), nil
 }
 
 func (c *component) NewSoundFromAssetPath(path string) (engine.Sound, error) {

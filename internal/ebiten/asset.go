@@ -11,10 +11,11 @@ import (
 
 // Asset is an engine.Asset.
 type Asset struct {
-	img       Image
-	atlas     Atlas
-	animation Animation
-	sound     Sound
+	img           Image
+	atlas         Atlas
+	animation     Animation
+	scalableImage ScalableImage
+	sound         Sound
 }
 
 // ToImage implements the ToImage method of engine.Asset.
@@ -32,6 +33,10 @@ func (a *Asset) ToAnimation() engine.Animation {
 	return &a.animation
 }
 
+func (a *Asset) ToScalableImage() engine.ScalableImage {
+	return &a.scalableImage
+}
+
 // ToSound implements the ToSound method of engine.Asset.
 func (a *Asset) ToSound() engine.Sound {
 	return &a.sound
@@ -47,15 +52,14 @@ func (a *Asset) UnmarshalBinary(data []byte) error {
 	switch ca.Type {
 	case common.AssetTypeImage:
 		a.img = Image{
-			img:               ebiten.NewImageFromImage(ca.Img),
-			sx:                1,
-			sy:                1,
-			r:                 1,
-			g:                 1,
-			b:                 1,
-			alpha:             1,
-			renderable:        true,
-			roundTranslations: true,
+			img:        ebiten.NewImageFromImage(ca.Img),
+			sx:         1,
+			sy:         1,
+			r:          1,
+			g:          1,
+			b:          1,
+			alpha:      1,
+			renderable: true,
 		}
 
 	case common.AssetTypeAtlas:
@@ -68,20 +72,27 @@ func (a *Asset) UnmarshalBinary(data []byte) error {
 	case common.AssetTypeAnimation:
 		a.animation = Animation{
 			Image: Image{
-				img:               ebiten.NewImageFromImage(ca.Img),
-				sx:                1,
-				sy:                1,
-				r:                 1,
-				g:                 1,
-				b:                 1,
-				alpha:             1,
-				renderable:        true,
-				roundTranslations: true,
+				img:        ebiten.NewImageFromImage(ca.Img),
+				sx:         1,
+				sy:         1,
+				r:          1,
+				g:          1,
+				b:          1,
+				alpha:      1,
+				renderable: true,
 			},
 			w:     ca.AnimWidth,
 			h:     ca.AnimHeight,
 			anims: ca.AnimationMap,
 			cache: make(map[uint16]*ebiten.Image),
+		}
+
+	case common.AssetTypeScalableImage:
+		a.scalableImage = ScalableImage{
+			img:            ebiten.NewImageFromImage(ca.Img),
+			regions:        ca.ScalableImg,
+			cache:          make(map[common.ScalableImageRegion]Image),
+			ImageComponent: newComponent(nil),
 		}
 
 	case common.AssetTypeSound:

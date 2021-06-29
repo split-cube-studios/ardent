@@ -20,27 +20,29 @@ func (i InvalidTypeError) Error() string {
 type config struct {
 	filepath string
 
-	Version string `yml:"version"`
-	Type    string `yml:"type"`
+	Version string `yaml:"version"`
+	Type    string `yaml:"type"`
 
 	Atlas map[string]struct {
-		X int `yml:"x"`
-		Y int `yml:"y"`
-		W int `yml:"w"`
-		H int `yml:"h"`
-	} `yml:"atlas,omitempty"`
+		X int `yaml:"x"`
+		Y int `yaml:"y"`
+		W int `yaml:"w"`
+		H int `yaml:"h"`
+	} `yaml:"atlas,omitempty"`
 
-	FrameWidth  int `yml:"framewidth,omitempty"`
-	FrameHeight int `yml:"frameheight,omitempty"`
+	FrameWidth  int `yaml:"framewidth,omitempty"`
+	FrameHeight int `yaml:"frameheight,omitempty"`
 
 	Animations map[string]struct {
-		Fps   int  `yml:"fps"`
-		Loop  bool `yml:"loop,omitempty"`
-		Start int  `yml:"start"`
-		End   int  `yml:"end"`
-	} `yml:"animations,omitempty"`
+		Fps   int  `yaml:"fps"`
+		Loop  bool `yaml:"loop,omitempty"`
+		Start int  `yaml:"start"`
+		End   int  `yaml:"end"`
+	} `yaml:"animations,omitempty"`
 
-	Sounds map[string][]string `yml:"sounds,omitempty"`
+	ScalableImage common.ScalableImage `yaml:"scalable_regions,omitempty"`
+
+	Sounds map[string][]string `yaml:"sounds,omitempty"`
 }
 
 func (c config) toAsset() (*common.Asset, error) {
@@ -78,6 +80,11 @@ func (c config) toAsset() (*common.Asset, error) {
 				End:   uint16(v.End),
 			}
 		}
+		asset.Img.Image, err = c.parseImage()
+
+	case "scalable_image":
+		asset.Type = common.AssetTypeScalableImage
+		asset.ScalableImg = c.ScalableImage
 		asset.Img.Image, err = c.parseImage()
 
 	case "sound":

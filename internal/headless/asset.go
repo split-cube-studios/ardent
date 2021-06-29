@@ -24,6 +24,10 @@ func (a Asset) ToAnimation() engine.Animation {
 	return new(Animation)
 }
 
+func (a Asset) ToScalableImage() engine.ScalableImage {
+	return new(ScalableImage)
+}
+
 // ToSound implements the ToSound method of engine.Asset.
 func (a Asset) ToSound() engine.Sound {
 	return new(Sound)

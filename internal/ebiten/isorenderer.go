@@ -163,62 +163,8 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 					continue
 				}
 
-				var tmpImage *isoRendererImage
-
-				switch a := img.(type) {
-				case *Image:
-					w, h := a.Size()
-					tmpImage = &isoRendererImage{
-						img: &Image{
-							img:                  a.img,
-							tx:                   a.tx - a.originX*float64(w),
-							ty:                   a.ty - a.originY*float64(h),
-							ox:                   a.ox,
-							oy:                   a.oy,
-							sx:                   a.sx,
-							sy:                   a.sy,
-							originX:              a.originX,
-							originY:              a.originY,
-							d:                    a.d,
-							z:                    a.z,
-							r:                    a.r,
-							g:                    a.g,
-							b:                    a.b,
-							alpha:                a.alpha,
-							renderable:           a.renderable,
-							roundTranslations:    a.roundTranslations,
-							triggersOverlapEvent: a.triggersOverlapEvent,
-						},
-					}
-
-				case *Animation:
-					a.tick()
-					w, h := a.Size()
-					tmpImage = &isoRendererImage{
-						img: &Image{
-							img:                  a.getFrame(),
-							tx:                   a.tx - a.originX*float64(w),
-							ty:                   a.ty - a.originY*float64(h),
-							ox:                   a.ox,
-							oy:                   a.oy,
-							sx:                   a.sx,
-							sy:                   a.sy,
-							originX:              a.originX,
-							originY:              a.originY,
-							d:                    a.d,
-							z:                    a.z,
-							r:                    a.r,
-							g:                    a.g,
-							b:                    a.b,
-							alpha:                a.alpha,
-							renderable:           a.renderable,
-							roundTranslations:    a.roundTranslations,
-							triggersOverlapEvent: a.triggersOverlapEvent,
-						},
-					}
-
-				default:
-					panic("Invalid image type")
+				tmpImage := &isoRendererImage{
+					img: engineImageToLocalImage(img),
 				}
 
 				// typically if an animation frame was not found
@@ -236,7 +182,7 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 					if a.isTile {
 						ty1 = img.ty + float64(h-a.tileHeight/8)
 					} else {
-						ty1 = img.ty + float64(h)
+						ty1 = img.ty + float64(h) - img.originY*float64(h)
 					}
 
 					img = b.img
@@ -245,7 +191,7 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 					if b.isTile {
 						ty2 = img.ty + float64(h-b.tileHeight/8)
 					} else {
-						ty2 = img.ty + float64(h)
+						ty2 = img.ty + float64(h) - img.originY*float64(h)
 					}
 
 					return ty1 < ty2
@@ -257,9 +203,9 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 							continue
 						}
 
-						ax := int(tmpImage.img.tx + tmpImage.img.ox)
-						ay := int(tmpImage.img.ty + tmpImage.img.oy)
 						aw, ah := tmpImage.img.Size()
+						ax := int(tmpImage.img.tx + tmpImage.img.ox - tmpImage.img.originX*float64(aw))
+						ay := int(tmpImage.img.ty + tmpImage.img.oy - tmpImage.img.originY*float64(ah))
 
 						bx, by := int(tile.img.tx), int(tile.img.ty)
 						bw, bh := tile.img.Size()
@@ -295,7 +241,7 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 				if r.drawQueue[i].isTile {
 					ty1 = img.ty + float64(h-r.drawQueue[i].tileHeight/8)
 				} else {
-					ty1 = img.ty + float64(h)
+					ty1 = img.ty + float64(h) - img.originY*float64(h)
 				}
 
 				img = r.drawQueue[j].img
@@ -304,7 +250,7 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 				if r.drawQueue[j].isTile {
 					ty2 = img.ty + float64(h-r.drawQueue[j].tileHeight/8)
 				} else {
-					ty2 = img.ty + float64(h)
+					ty2 = img.ty + float64(h) - img.originY*float64(h)
 				}
 
 				return ty1 < ty2
@@ -332,32 +278,9 @@ func (r *IsoRenderer) draw(screen *ebiten.Image) {
 				img := isoImage.img
 
 				op := new(ebiten.DrawImageOptions)
-				w, h := img.Size()
+				op.GeoM.Translate(math.Round(-cx), math.Round(-cy))
 
-				op.GeoM.Scale(img.sx, img.sy)
-				op.GeoM.Translate(
-					-img.originX*float64(w),
-					-img.originY*float64(h),
-				)
-				op.GeoM.Rotate(img.d)
-				op.GeoM.Translate(
-					img.originX*float64(w),
-					img.originY*float64(h),
-				)
-
-				x, y := img.tx+img.ox, img.ty+img.oy
-				if img.roundTranslations {
-					x, y = math.Round(x), math.Round(y)
-				}
-
-				op.GeoM.Translate(
-					x-cx,
-					y-cy,
-				)
-
-				op.ColorM.Scale(img.r, img.g, img.b, img.alpha)
-
-				screen.DrawImage(img.img, op)
+				r.drawImageAndLayers(img, screen, op)
 			}
 
 			r.drawQueue = r.drawQueue[:0]
