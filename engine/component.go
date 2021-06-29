@@ -34,7 +34,7 @@ type ImageComponent interface {
 	NewImageFromImage(image.Image) Image
 
 	// NewTextImage returns an image containing text.
-	NewTextImage(text string, w, h int, face font.Face, c color.Color) Image
+	NewTextImage(text string, face font.Face, c color.Color) Image
 
 	// NewImageFromLayers merges image layers on in order and returns a new image.
 	NewImageFromLayers(...Image) Image

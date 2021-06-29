@@ -87,8 +87,10 @@ func (c *component) NewImageFromImage(img image.Image) engine.Image {
 	}
 }
 
-func (c *component) NewTextImage(txt string, w, h int, face font.Face, clr color.Color) engine.Image {
-	img := ebiten.NewImage(w, h)
+func (c *component) NewTextImage(txt string, face font.Face, clr color.Color) engine.Image {
+	r := text.BoundString(face, txt)
+	img := ebiten.NewImage(r.Dx(), r.Dy()+face.Metrics().Height.Round()/2)
+	img.Fill(color.White)
 	text.Draw(img, txt, face, 0, face.Metrics().Height.Round(), clr)
 
 	return &Image{

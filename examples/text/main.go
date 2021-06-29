@@ -26,8 +26,6 @@ func main() {
 	renderer := game.NewRenderer()
 	image := game.NewTextImage(
 		"Hello world!\nThis is a sample text image!",
-		400,
-		30,
 		basicfont.Face7x13,
 		color.White,
 	)
