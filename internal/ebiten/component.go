@@ -144,6 +144,15 @@ func (c *component) NewAnimationFromAssetPath(path string) (engine.Animation, er
 	return a.ToAnimation(), nil
 }
 
+func (c *component) NewScalableImageFromAssetPath(path string) (engine.ScalableImage, error) {
+	a, err := c.NewAssetFromPath(path)
+	if err != nil {
+		return nil, err
+	}
+
+	return a.ToScalableImage(), nil
+}
+
 func (c *component) NewSoundFromAssetPath(path string) (engine.Sound, error) {
 	a, err := c.NewAssetFromPath(path)
 	if err != nil {

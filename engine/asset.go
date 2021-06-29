@@ -5,5 +5,6 @@ type Asset interface {
 	ToImage() Image
 	ToAtlas() Atlas
 	ToAnimation() Animation
+	ToScalableImage() ScalableImage
 	ToSound() Sound
 }

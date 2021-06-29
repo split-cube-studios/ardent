@@ -11,10 +11,11 @@ import (
 
 // Asset is an engine.Asset.
 type Asset struct {
-	img       Image
-	atlas     Atlas
-	animation Animation
-	sound     Sound
+	img           Image
+	atlas         Atlas
+	animation     Animation
+	scalableImage ScalableImage
+	sound         Sound
 }
 
 // ToImage implements the ToImage method of engine.Asset.
@@ -30,6 +31,10 @@ func (a *Asset) ToAtlas() engine.Atlas {
 // ToAnimation implements the ToAnimation method of engine.Asset.
 func (a *Asset) ToAnimation() engine.Animation {
 	return &a.animation
+}
+
+func (a *Asset) ToScalableImage() engine.ScalableImage {
+	return &a.scalableImage
 }
 
 // ToSound implements the ToSound method of engine.Asset.
@@ -80,6 +85,14 @@ func (a *Asset) UnmarshalBinary(data []byte) error {
 			h:     ca.AnimHeight,
 			anims: ca.AnimationMap,
 			cache: make(map[uint16]*ebiten.Image),
+		}
+
+	case common.AssetTypeScalableImage:
+		a.scalableImage = ScalableImage{
+			img:            ebiten.NewImageFromImage(ca.Img),
+			regions:        ca.ScalableImg,
+			cache:          make(map[common.ScalableImageRegion]Image),
+			ImageComponent: newComponent(nil),
 		}
 
 	case common.AssetTypeSound:

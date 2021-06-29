@@ -35,6 +35,9 @@ const (
 	// AssetTypeAnimation indicates an animated image asset.
 	AssetTypeAnimation
 
+	// AssetTypeScalableImage indicates a scalable image asset.
+	AssetTypeScalableImage
+
 	// AssetTypeSound indicates an audio asset.
 	AssetTypeSound
 )
@@ -47,6 +50,8 @@ type Asset struct {
 	AnimationMap map[string]Animation
 	AnimWidth    uint16
 	AnimHeight   uint16
+
+	ScalableImg ScalableImage
 
 	Snd Sound
 
@@ -66,7 +71,7 @@ func NewAsset() *Asset {
 // and Marshal calling on gob.
 func (a Asset) Marshal() ([]byte, error) {
 	switch a.Type {
-	case AssetTypeImage, AssetTypeAtlas, AssetTypeAnimation, AssetTypeSound:
+	case AssetTypeImage, AssetTypeAtlas, AssetTypeAnimation, AssetTypeScalableImage, AssetTypeSound:
 	default:
 		return nil, InvalidAssetType(a.Type)
 	}
@@ -102,8 +107,9 @@ func (a *Asset) Unmarshal(data []byte) error {
 
 	decoder := gob.NewDecoder(buf)
 	err = decoder.Decode(a)
+
 	switch a.Type {
-	case AssetTypeImage, AssetTypeAtlas, AssetTypeAnimation, AssetTypeSound:
+	case AssetTypeImage, AssetTypeAtlas, AssetTypeAnimation, AssetTypeScalableImage, AssetTypeSound:
 	default:
 		return InvalidAssetType(a.Type)
 	}

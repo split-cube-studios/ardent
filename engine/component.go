@@ -44,6 +44,9 @@ type ImageComponent interface {
 
 	// NewAnimationFromAssetPath returns an animation from an asset file path.
 	NewAnimationFromAssetPath(string) (Animation, error)
+
+	// NewScalableImageFromAssetPath returns a scalable image from an asset file path.
+	NewScalableImageFromAssetPath(string) (ScalableImage, error)
 }
 
 // SoundComponent produces sound components.

@@ -15,6 +15,7 @@ import (
 // Renderer is a simple ebiten renderer.
 type Renderer struct {
 	camera *engine.Camera
+	uis    []*engine.UI
 
 	partitionMap *engine.PartitionMap
 
@@ -35,6 +36,11 @@ func (r *Renderer) AddImage(images ...engine.Image) {
 		img.(disposable).Undispose()
 		r.partitionMap.Add(img)
 	}
+}
+
+// AddUI adds UIs to the renderer.
+func (r *Renderer) AddUI(uis ...*engine.UI) {
+	r.uis = append(r.uis, uis...)
 }
 
 // SetCamera implements engine.Renderer.
@@ -97,6 +103,13 @@ func (r *Renderer) draw(screen *ebiten.Image) {
 				r.drawImageAndLayers(entry.(engine.Image), screen, op)
 			}
 		})
+
+	// draw UIs
+	for _, ui := range r.uis {
+		for _, img := range ui.Draw() {
+			r.drawImageAndLayers(img, screen, nil)
+		}
+	}
 }
 
 func (r *Renderer) drawImageAndLayers(
